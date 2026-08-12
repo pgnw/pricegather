@@ -12,3 +12,19 @@ model User {
   email String
   name  String?
 }
+
+model Product {
+  id          BigInt  @id @default(autoincrement())
+  store       Store   @relation(fields: [storeId], references: [id])
+  storeId     Int
+  name        String
+  description String
+  grams       Int
+  price       Decimal // TODO replace this with a seperate table to track price changes over time.
+}
+
+model Store {
+  id       Int       @id @default(autoincrement())
+  name     String
+  products Product[]
+}
