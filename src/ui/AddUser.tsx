@@ -13,10 +13,10 @@ export default function AddUser() {
                     <h2 className={'text-2xl'}>Create new user</h2>
 
                     <label className={'mb-2 block text-sm font-medium'}>Name</label>
-                    <input className={' bg-blue-200'} name="username" type="text" required/>
+                    <input autoComplete='off' className={' bg-blue-200'} name="username" type="text" required/>
 
                     <label className={'mb-2 block text-sm font-medium'}>Email</label>
-                    <input className={' bg-blue-200'} name="email" type="text" required/>
+                    <input autoComplete='off' className={' bg-blue-200'} name="email" type="text" required/>
 
                     <button type={'submit'} className={'block border border-black cursor-pointer p-1 m-2'}>Submit
                     </button>
