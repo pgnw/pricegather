@@ -13,7 +13,6 @@ export default async function Home() {
     return (
         <main className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans text-black">
             <AddUser />
-            TODO REMOVE SUGGESTION SLOP
             <Suspense fallback={'LOADING'}>
                 <Users></Users>
             </Suspense>
