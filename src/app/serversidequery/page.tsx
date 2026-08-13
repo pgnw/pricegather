@@ -13,7 +13,9 @@ export default async function Home() {
             <div className={'flex flex-col flex-1 items-center mt-5 bg-red'}>
                 <h1 className={'text-2xl font-bold '}>Product Search</h1>
                 <div className={'flex flex-col flex-1  mt-4 bg-gray-200 p-4 w-full'}>
-                    <SearchBar></SearchBar>
+                    <Suspense fallback={null}>
+                        <SearchBar></SearchBar>
+                    </Suspense>
                     <Suspense fallback={<ProductSearchLoading/>}>
                         <ProductSearch/>
                     </Suspense>
