@@ -4,10 +4,17 @@ import {userSchema} from '@/lib/data-validation';
 import {revalidatePath} from "next/cache";
 import { z} from 'zod';
 import {redirect} from "next/navigation";
+import {Product} from "@/generated/prisma/client";
 
 export async function goUp(prevState: number, formData: FormData)
 {
 return prevState+1;
+}
+
+export async function getProducts() : Promise<Product[]>
+{
+    const products = await prisma.product.findMany();
+    return products;
 }
 
 export async function getUsers()
@@ -16,6 +23,7 @@ export async function getUsers()
 
     return users;
 }
+
 export async function createUser(prevState: State,formData: FormData) {
     const userValidation = userSchema.omit({id: true});
     const newUser = userValidation.safeParse(

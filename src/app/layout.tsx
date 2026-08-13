@@ -24,7 +24,7 @@ export default function RootLayout({children}: LayoutProps<"/">) {
             lang="en"
             className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}>
             <body className="min-h-full flex flex-col">
-                <nav className="flex flex-row">
+                <nav className="flex flex-row ">
                     <Link className={'text-blue-600 underline hover:text-blue-800 m-2'} href="/">Home</Link>
                     <Link className={'text-blue-600 underline hover:text-blue-800 m-2'} href="/testing">Testing Sloppa</Link>
                     <Link className={'text-blue-600 underline hover:text-blue-800 m-2'} href="/serversidequery">Serverside query
