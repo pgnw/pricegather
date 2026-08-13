@@ -16,7 +16,6 @@ export default async function Home() {
             <Suspense fallback={'LOADING'}>
                 <Users></Users>
             </Suspense>
-            <Link className={'text-blue-600 underline hover:text-blue-800'} href='/testing'>Testing</Link>
         </main>
     );
 }

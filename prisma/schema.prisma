@@ -14,7 +14,7 @@ model User {
 }
 
 model Product {
-  id          BigInt  @id @default(autoincrement())
+  id          BigInt  @id // Keep on eye on aldi's product ids, not sure if it will fit into an integer field.
   store       Store   @relation(fields: [storeId], references: [id])
   storeId     Int
   name        String
