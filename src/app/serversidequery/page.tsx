@@ -5,6 +5,7 @@ import Link from "next/link";
 import {getProducts} from "@/lib/actions";
 import ProductSearch from "@/ui/ProductSearch";
 import ProductSearchLoading from "@/ui/ProductSearchLoading";
+import SearchBar from "@/ui/SearchBar";
 
 export default async function Home() {
     return (
@@ -12,7 +13,7 @@ export default async function Home() {
             <div className={'flex flex-col flex-1 items-center mt-5 bg-red'}>
                 <h1 className={'text-2xl font-bold '}>Product Search</h1>
                 <div className={'flex flex-col flex-1  mt-4 bg-gray-200 p-4 w-full'}>
-                    <input className={'p-1 bg-white rounded-md'} placeholder={'Product Search...'}/>
+                    <SearchBar></SearchBar>
                     <Suspense fallback={<ProductSearchLoading/>}>
                         <ProductSearch/>
                     </Suspense>
