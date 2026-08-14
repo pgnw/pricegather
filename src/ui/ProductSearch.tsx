@@ -2,8 +2,8 @@
 import {getProducts} from "@/lib/actions";
 
 
-export default async function ProductSearch() {
-    const products = await getProducts()
+export default async function ProductSearch(search: { search: string; }) {
+    const products = await getProducts(search)
     return (
         <>
             {products.map((product) => (

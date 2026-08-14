@@ -1,9 +1,16 @@
 import {Suspense} from "react";
-import ProductSearch from "@/ui/ProductSearch";
-import ProductSearchLoading from "@/ui/ProductSearchLoading";
+import ProductTable from "@/ui/ProductSearch";
+import ProductTableLoading from "@/ui/ProductSearchLoading";
 import SearchBar from "@/ui/SearchBar";
 
-export default async function Home() {
+export default async function Page(props:
+                                   {
+                                       searchParams?: Promise<{
+                                           search?: string;
+                                       }>;
+                                   }) {
+    const searchParams = (await props.searchParams)?.search || "";
+
     return (
         <main className="font-sans text-black max-w-6xl mx-auto w-1/3 mt-2">
             <div className={'flex flex-col flex-1 items-center mt-5 bg-red'}>
@@ -12,8 +19,8 @@ export default async function Home() {
                     <Suspense fallback={null}>
                         <SearchBar></SearchBar>
                     </Suspense>
-                    <Suspense fallback={<ProductSearchLoading/>}>
-                        <ProductSearch/>
+                    <Suspense key={searchParams} fallback={<ProductTableLoading/>}>
+                        <ProductTable search={searchParams} />
                     </Suspense>
                 </div>
 
