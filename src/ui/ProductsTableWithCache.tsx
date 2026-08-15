@@ -1,9 +1,9 @@
 'use server';
-import {getProducts} from "@/lib/actions";
+import {getProducts, getProductsCached} from "@/lib/actions";
 
 
-export default async function ProductSearch(search: { name: string; }) {
-    const products = await getProducts(search)
+export default async function ProductsTableWithCache(search: { name: string; }) {
+    const products = await getProductsCached(search)
     return (
         <>
             {products.map((product) => (

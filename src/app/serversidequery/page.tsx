@@ -1,5 +1,5 @@
 import {Suspense} from "react";
-import ProductTable from "@/ui/ProductSearch";
+import ProductTable from "@/ui/ProductsTable";
 import ProductTableLoading from "@/ui/ProductSearchLoading";
 import SearchBar from "@/ui/SearchBar";
 
