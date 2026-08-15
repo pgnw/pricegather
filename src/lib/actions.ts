@@ -5,38 +5,11 @@ import {z} from 'zod';
 import {redirect} from "next/navigation";
 import {PrismaClient, Product} from "@/generated/prisma/client";
 import {prisma} from '@/lib/prisma'
-import {cacheLife} from 'next/cache'
 
 export async function goUp(prevState: number, formData: FormData) {
     return prevState + 1;
 }
 
-export async function getProductsCached(search: { name: string }) {
-
-    console.log('pulling request')
-    cacheLife('hours')
-    const products = await prisma.product.findMany({
-        where: {
-            name: {
-                contains: search?.name ?? '',
-                mode: 'insensitive'
-            }
-        },
-        orderBy: {
-            name: 'asc'
-        }
-    });
-
-    const newProducts = products.map((p) => ({
-            id: p.id,
-            name: p.name,
-            price: p.price.toNumber(),
-            grams: p.grams,
-            description: p.description,
-            storeId: p.storeId,
-        }));
-    return newProducts;
-}
 
 export async function getProducts(search: { name: string }): Promise<Product[]> {
     return await prisma.product.findMany({
