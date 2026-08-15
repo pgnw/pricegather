@@ -1,4 +1,4 @@
-import {getProductsCached} from "@/lib/actions";
+
 import ProductsTable from "@/ui/ProductsTable";
 import SearchBar from "@/ui/SearchBar";
 import {Suspense} from "react";
