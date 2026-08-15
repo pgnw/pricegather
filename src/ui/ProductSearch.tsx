@@ -2,7 +2,7 @@
 import {getProducts} from "@/lib/actions";
 
 
-export default async function ProductSearch(search: { search: string; }) {
+export default async function ProductSearch(search: { name: string; }) {
     const products = await getProducts(search)
     return (
         <>

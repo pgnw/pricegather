@@ -1,32 +1,27 @@
 'use server';
-import {prisma} from "@/lib/prisma";
 import {userSchema} from '@/lib/data-validation';
 import {revalidatePath} from "next/cache";
 import {z} from 'zod';
 import {redirect} from "next/navigation";
-import {Prisma, Product} from "@/generated/prisma/client";
+import {PrismaClient, Product} from "@/generated/prisma/client";
+import {prisma} from '@/lib/prisma'
 
 export async function goUp(prevState: number, formData: FormData) {
     return prevState + 1;
 }
 
-export async function getProducts(name?: string): Promise<Product[]> {
-    const filter: Prisma.ProductFindManyArgs = {
-        orderBy:
-            {
-                name: 'desc'
-            },
-        where:
-            {
-                name:
-                    {
-                        contains: name || ""
-                    }
+export async function getProducts(search: {name: string}): Promise<Product[]> {
+    return await prisma.product.findMany( {
+        where: {
+            name: {
+                contains: search.name ?? '',
+                mode: 'insensitive'
             }
-    };
-
-
-    return await prisma.product.findMany(filter);
+        },
+        orderBy: {
+            name: 'asc'
+        }
+    } );
 }
 
 export async function getUsers() {

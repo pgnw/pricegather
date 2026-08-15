@@ -20,7 +20,7 @@ export default async function Page(props:
                         <SearchBar></SearchBar>
                     </Suspense>
                     <Suspense key={searchParams} fallback={<ProductTableLoading/>}>
-                        <ProductTable search={searchParams} />
+                        <ProductTable name={searchParams} />
                     </Suspense>
                 </div>
 
