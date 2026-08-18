@@ -11,11 +11,11 @@ export async function goUp(prevState: number, formData: FormData) {
 }
 
 
-export async function getProducts(search: { name: string }): Promise<Product[]> {
+export async function getProducts(search?: { name: string }): Promise<Product[]> {
     return await prisma.product.findMany({
         where: {
             name: {
-                contains: search.name ?? '',
+                contains: search?.name ?? '',
                 mode: 'insensitive'
             }
         },
