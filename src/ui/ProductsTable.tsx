@@ -1,5 +1,5 @@
 'use server';
-import {getProducts, getProductsCached} from "@/lib/actions";
+import {getProducts} from "@/lib/actions";
 
 
 export default async function ProductsTable(search: { name: string; }) {
