@@ -1,5 +1,5 @@
 'use client';
-import {Suspense} from "react";
+import {Suspense, useEffect, useState} from "react";
 import ProductTable from "@/ui/ProductsTable";
 import ProductTableLoading from "@/ui/ProductSearchLoading";
 import SearchBar from "@/ui/SearchBar";
@@ -9,7 +9,12 @@ import {Product} from "@/generated/prisma/client";
 
 
 export default function Page() {
-    const {data, error, isLoading} = useSWR<Product[]>('/api/', fetcher);
+    const {data, error, isLoading} = useSWR<Product[]>('/api', fetcher,
+        {
+            refreshInterval: 3000,
+        });
+
+
 
     if (error) {
         return (<>
