@@ -9,17 +9,30 @@ import {Product} from "@/generated/prisma/client";
 
 
 export default function Page() {
-    const {data, error, isLoading} = useSWR<Product[]>('/api', fetcher,
-        {
-            refreshInterval: 3000,
-        });
+    const refreshTime = new Date();
+    refreshTime.setSeconds(refreshTime.getSeconds() + 5);
 
+    const {data, error, isLoading} = useSWR<Product[]>('/api' , fetcher, {
+        refreshInterval: () =>
+        {
+            const now = new Date();
+            const midnightTime = new Date(now);
+            midnightTime.setHours(24,0,0,0);
+
+            const nextRefesh = midnightTime.getTime() - now.getTime() + 10000;
+            console.log(`${nextRefesh} milliseconds until refresh`);
+            return nextRefesh;
+        },
+        revalidateOnFocus: false,
+        revalidateOnReconnect: false,
+        revalidateOnMount: false,
+    });
 
 
     if (error) {
         return (<>
             <div>its over</div>
-            <div>{error}</div>
+            <div>{error.message}</div>
         </>);
     } else if (isLoading) {
         return (<>
