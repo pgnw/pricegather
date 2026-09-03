@@ -6,7 +6,7 @@ import SearchBar from "@/ui/SearchBar";
 import useSWR from "swr";
 import {fetcher} from "@/lib/fetcher";
 import {Product} from "@/generated/prisma/client";
-import {create, search, insert} from "@orama/orama";
+import {create, search, insert, TypedDocument} from "@orama/orama";
 import {Decimal} from "@prisma/client/runtime/client";
 import {useSearchParams} from "next/navigation";
 import * as sea from "node:sea";
@@ -17,7 +17,7 @@ export default function Page() {
     const refreshTime = new Date();
     refreshTime.setSeconds(refreshTime.getSeconds() + 5);
 
-    // USE EFFECT GO HERE
+    const [products, setProducts] = useState<OramaProduct[]>([]);
 
     const {data, error, isLoading} = useSWR<Product[]>('/api', fetcher, {
         refreshInterval: () => {
@@ -29,9 +29,9 @@ export default function Page() {
             console.log(`${nextRefesh} milliseconds until refresh`);
             return nextRefesh;
         },
-        revalidateOnFocus: false,
-        revalidateOnReconnect: false,
-        revalidateOnMount: false,
+        //revalidateOnFocus: false,
+        //revalidateOnReconnect: false,
+        //revalidateOnMount: false,
     });
     if (error) {
         return (<>
@@ -42,15 +42,12 @@ export default function Page() {
         return (<>
             <div>LOADING</div>
         </>);
-    } else {
-        setProducts ( data?.map(p => {
-            return ProductPrismaToOrama(p);
-        }) ?? []);
     }
+
 
     const db = create({
         schema: {
-            id: "number",
+            productId: "number",
             name: "string",
             description: "string",
             price: "number",
@@ -58,25 +55,17 @@ export default function Page() {
         },
     });
 
-    products.map(product => {
-        insert(db, {
-            name: product.name,
-            description: product.description,
-            grams: product.grams,
-            price: new Decimal(product.price).toNumber(),
-        });
+
+    data?.map(product => {
+        insert(db, ProductPrismaToOrama(product));
     })
 
     async function runSearch(e: React.ChangeEvent<HTMLInputElement>) {
         const queryStr = e.target.value;
         const searchResult = await search(db, {term: queryStr});
-        setProducts(searchResult.hits.map(h => {
-            return h.document;
-        }));
+        setProducts(searchResult.hits.map(h => h.document
+        ));
         console.log(queryStr);
-        products.forEach(p => {
-            console.log(p.name);
-        });
     }
 
     return (
@@ -85,9 +74,13 @@ export default function Page() {
                 <h1 className={'text-2xl font-bold '}>Product Search</h1>
                 <input className={'border black rounded-md m-2'} id='txtSearch' onChange={runSearch} tabIndex={1}/>
                 <div className={'flex flex-col flex-1  mb-4 bg-gray-200 p-4 w-full'}>
-                    {products.map((item) => (
-                        <li key={item.id}>{item.name}</li>
-                    ))}
+                    <ol>
+                        {products.map((item) => (
+                            <>
+                                <li key={item.productId}>{item.name}</li>
+                            </>
+                        ))}
+                    </ol>
                 </div>
 
             </div>
