@@ -1,12 +1,12 @@
 'use client';
-import {Suspense, useEffect, useState} from "react";
+import {Fragment, Suspense, useEffect, useState} from "react";
 import ProductTable from "@/ui/ProductsTable";
 import ProductTableLoading from "@/ui/ProductSearchLoading";
 import SearchBar from "@/ui/SearchBar";
 import useSWR from "swr";
 import {fetcher} from "@/lib/fetcher";
 import {Product} from "@/generated/prisma/client";
-import {create, search, insert, TypedDocument} from "@orama/orama";
+import {create, search, insert, TypedDocument, Orama} from "@orama/orama";
 import {Decimal} from "@prisma/client/runtime/client";
 import {useSearchParams} from "next/navigation";
 import * as sea from "node:sea";
@@ -14,10 +14,18 @@ import * as sea from "node:sea";
 import {OramaProduct, ProductPrismaToOrama} from '@/lib/Orama';
 
 export default function Page() {
+    const [products, setProducts] = useState<OramaProduct[]>([]);
+
+    const productSchema ={
+        productId: "number",
+        name: "string",
+        description: "string",
+        price: "number",
+        grams: "number"
+    } as const;
+
     const refreshTime = new Date();
     refreshTime.setSeconds(refreshTime.getSeconds() + 5);
-
-    const [products, setProducts] = useState<OramaProduct[]>([]);
 
     const {data, error, isLoading} = useSWR<Product[]>('/api', fetcher, {
         refreshInterval: () => {
@@ -29,6 +37,7 @@ export default function Page() {
             console.log(`${nextRefesh} milliseconds until refresh`);
             return nextRefesh;
         },
+        keepPreviousData: true,
         //revalidateOnFocus: false,
         //revalidateOnReconnect: false,
         //revalidateOnMount: false,
@@ -43,29 +52,26 @@ export default function Page() {
             <div>LOADING</div>
         </>);
     }
+    let db: Orama<typeof productSchema>
+    startOrama();
 
+    async function startOrama()
+    {
+         db = create({
+            schema: productSchema,
+        });
 
-    const db = create({
-        schema: {
-            productId: "number",
-            name: "string",
-            description: "string",
-            price: "number",
-            grams: "number"
-        },
-    });
+        data?.map(product => {
+            insert(db, ProductPrismaToOrama(product));
+        });
+    }
 
-
-    data?.map(product => {
-        insert(db, ProductPrismaToOrama(product));
-    })
 
     async function runSearch(e: React.ChangeEvent<HTMLInputElement>) {
         const queryStr = e.target.value;
         const searchResult = await search(db, {term: queryStr});
         setProducts(searchResult.hits.map(h => h.document
         ));
-        console.log(queryStr);
     }
 
     return (
@@ -76,9 +82,9 @@ export default function Page() {
                 <div className={'flex flex-col flex-1  mb-4 bg-gray-200 p-4 w-full'}>
                     <ol>
                         {products.map((item) => (
-                            <>
-                                <li key={item.productId}>{item.name}</li>
-                            </>
+                            <Fragment key={item.productId}>
+                                <li>{item.productId + item.name}</li>
+                            </Fragment>
                         ))}
                     </ol>
                 </div>
