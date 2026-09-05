@@ -1,21 +1,28 @@
-import {Product} from "@/generated/prisma/client";
 import {Decimal} from "@prisma/client/runtime/client";
+import {Product} from "@/generated/prisma/client";
+
+export const OramaProductSchema = {
+    productId: "number",
+    name: "string",
+    description: "string",
+    price: "number",
+    grams: "number"
+} as const;
 
 export type OramaProduct = {
-    productId: Product["id"];
-    name: Product['name'];
-    description: Product['description'];
+    productId: number;
+    name: string;
+    description: string;
     price: number;
-    grams: Product['grams'];
+    grams: number;
 };
 
 export function ProductPrismaToOrama(product: Product): OramaProduct {
-    const newObject : OramaProduct = {
-        productId : product.id,
+    return {
+        productId: product.id,
         name: product.name,
         description: product.description,
         price: new Decimal(product.price).toNumber(),
         grams: product.grams
     };
-    return newObject;
 }

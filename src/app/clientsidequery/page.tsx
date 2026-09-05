@@ -6,23 +6,15 @@ import SearchBar from "@/ui/SearchBar";
 import useSWR from "swr";
 import {fetcher} from "@/lib/fetcher";
 import {Product} from "@/generated/prisma/client";
-import {create, search, insert, TypedDocument, Orama} from "@orama/orama";
+import {create, insert, Orama, Results, search} from "@orama/orama"
 import {Decimal} from "@prisma/client/runtime/client";
 import {useSearchParams} from "next/navigation";
 import * as sea from "node:sea";
 
-import {OramaProduct, ProductPrismaToOrama} from '@/lib/Orama';
+import {OramaProduct, OramaProductSchema, ProductPrismaToOrama} from '@/lib/Orama';
 
 export default function Page() {
-    const [products, setProducts] = useState<OramaProduct[]>([]);
-
-    const productSchema ={
-        productId: "number",
-        name: "string",
-        description: "string",
-        price: "number",
-        grams: "number"
-    } as const;
+    const [searchTerm, setSearchTerm] = useState("");
 
     const refreshTime = new Date();
     refreshTime.setSeconds(refreshTime.getSeconds() + 5);
@@ -52,40 +44,44 @@ export default function Page() {
             <div>LOADING</div>
         </>);
     }
-    let db: Orama<typeof productSchema>
-    startOrama();
+    let db: Orama<typeof OramaProductSchema>
+    db = create({
+        schema: OramaProductSchema,
+    });
 
-    async function startOrama()
-    {
-         db = create({
-            schema: productSchema,
-        });
+    data?.forEach(product => {
+        insert(db, ProductPrismaToOrama(product));
+    });
 
-        data?.map(product => {
-            insert(db, ProductPrismaToOrama(product));
-        });
-    }
+    const result = search(db, {term: searchTerm});
 
+    const syncResult = result as Exclude<
+        typeof result,
+        Promise<unknown>
+    >;
 
-    async function runSearch(e: React.ChangeEvent<HTMLInputElement>) {
-        const queryStr = e.target.value;
-        const searchResult = await search(db, {term: queryStr});
-        setProducts(searchResult.hits.map(h => h.document
-        ));
-    }
+    const products = syncResult.hits.map(h => h.document);
 
     return (
         <main className="font-sans text-black max-w-6xl mx-auto w-1/3 mt-2">
             <div className={'flex flex-col flex-1 items-center mt-5 bg-red'}>
                 <h1 className={'text-2xl font-bold '}>Product Search</h1>
-                <input className={'border black rounded-md m-2'} id='txtSearch' onChange={runSearch} tabIndex={1}/>
+                <input className={'border black rounded-md m-2'} id='txtSearch'
+                       onChange={(e) => setSearchTerm(e.target.value)}
+                       tabIndex={1}/>
                 <div className={'flex flex-col flex-1  mb-4 bg-gray-200 p-4 w-full'}>
                     <ol>
-                        {products.map((item) => (
-                            <Fragment key={item.productId}>
-                                <li>{item.productId + item.name}</li>
+                        {products.map(product => {
+                            console.log(product);
+                            return <Fragment key={product.productId}>
+                                <div>{product.name}</div>
                             </Fragment>
-                        ))}
+                        })}
+                        {/*{products.map((item) => {*/}
+                        {/*    <Fragment key={item.productId}>*/}
+                        {/*        <li>{item.productId + item.name}</li>*/}
+                        {/*    </Fragment>*/}
+                        {/*))}*/}
                     </ol>
                 </div>
 
