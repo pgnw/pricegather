@@ -24,7 +24,15 @@ model Product {
 }
 
 model Store {
-  id       Int       @id @default(autoincrement())
-  name     String    @unique
-  products Product[]
+  id              Int             @id @default(autoincrement())
+  name            String          @unique
+  products        Product[]
+  storeCategories StoreCategory[]
+}
+
+model StoreCategory {
+  id       Int    @id @default(autoincrement())
+  store    Store  @relation(fields: [storeId], references: [id])
+  storeId  Int
+  category String
 }

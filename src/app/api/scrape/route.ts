@@ -8,7 +8,7 @@ export async function GET() {
     // if (!cronSecret || authHeader !== `Bearer ${cronSecret}`) {
     //     return res.status(401).end('Unauthorized');
     // }
-    scrape();
+    await scrape();
 
     return NextResponse.json({ ok: true });
 }
