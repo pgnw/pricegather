@@ -1,5 +1,5 @@
 'use client';
-import {Fragment, Suspense, useEffect, useMemo, useState} from "react";
+import {Fragment, Suspense, useEffect, useMemo, useRef, useState} from "react";
 import ProductTable from "@/ui/ProductsTable";
 import ProductTableLoading from "@/ui/ProductSearchLoading";
 import SearchBar from "@/ui/SearchBar";
@@ -17,7 +17,7 @@ export default function Page() {
     const [searchTerm, setSearchTerm] = useState("");
 
     const refreshTime = new Date();
-    refreshTime.setSeconds(refreshTime.getSeconds() + 5);
+    refreshTime.setSeconds(refreshTime.getSeconds() + 50);
 
     const {data} = useSWR<Product[]>('/api', fetcher, {
         refreshInterval: () => {
@@ -59,15 +59,25 @@ export default function Page() {
             Promise<unknown>>;
         return syncResult.hits.map(hit => hit.document);
     }, [db, searchTerm]);
-    // const result = search(newDb, {term: searchTerm});
-    //
-    // const syncResult = result as Exclude<
-    //     typeof result,
-    //     Promise<unknown>
-    // >;
-    //
-    // const products = syncResult.hits.map(h => h.document);
     console.log('rendering page');
+
+    const prev = useRef({
+        data,
+        db,
+        searchTerm
+    });
+
+    console.log({
+        dataChanged: prev.current.data !== data,
+        dbChanged: prev.current.db !== db,
+        searchTermChanged: prev.current.searchTerm !== searchTerm
+    });
+
+    prev.current = {
+        data,
+        db,
+        searchTerm
+    };
     return (
         <main className="font-sans text-black max-w-6xl mx-auto w-1/3 mt-2">
             <div className={'flex flex-col flex-1 items-center mt-5 bg-red'}>
@@ -78,7 +88,6 @@ export default function Page() {
                 <div className={'flex flex-col flex-1  mb-4 bg-gray-200 p-4 w-full'}>
                     <ol>
                         {products.map(product => {
-                            console.log(product);
                             return <Fragment key={product.productId}>
                                 <div>{product.name}</div>
                             </Fragment>
