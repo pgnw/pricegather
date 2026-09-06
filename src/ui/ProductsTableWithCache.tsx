@@ -1,5 +1,5 @@
 // 'use server';
-// import {getProducts} from "@/lib/actions";
+// scrape {getProducts} from "@/lib/actions";
 //
 //
 // export default async function ProductsTableWithCache(search: { name: string; }) {
