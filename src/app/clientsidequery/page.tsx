@@ -15,7 +15,6 @@ import {OramaProduct, OramaProductSchema, ProductPrismaToOrama} from '@/lib/Oram
 
 export default function Page() {
     const [searchTerm, setSearchTerm] = useState("");
-
     const refreshTime = new Date();
     refreshTime.setSeconds(refreshTime.getSeconds() + 50);
 
