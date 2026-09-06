@@ -59,6 +59,14 @@ export default function Page() {
             Promise<unknown>>;
         return syncResult.hits.map(hit => hit.document);
     }, [db, searchTerm]);
+
+    const prevData = useRef(data);
+    useEffect(() => {
+        console.log('same reference?', prevData.current === data);
+        console.log('same content?', JSON.stringify(prevData.current) === JSON.stringify(data));
+        prevData.current = data;
+    }, [data]);
+
     console.log('rendering page');
     return (
         <main className="font-sans text-black max-w-6xl mx-auto w-1/3 mt-2">
