@@ -1,3 +1,5 @@
-export function GET(request: Request) {
-    return new Response('Hello from Vercel!');
+import { NextResponse } from 'next/server';
+
+export async function GET() {
+    return NextResponse.json({ ok: true });
 }
