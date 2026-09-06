@@ -1,5 +1,5 @@
 'use client';
-import {Fragment, Suspense, useEffect, useState} from "react";
+import {Fragment, Suspense, useEffect, useMemo, useState} from "react";
 import ProductTable from "@/ui/ProductsTable";
 import ProductTableLoading from "@/ui/ProductSearchLoading";
 import SearchBar from "@/ui/SearchBar";
@@ -19,14 +19,14 @@ export default function Page() {
     const refreshTime = new Date();
     refreshTime.setSeconds(refreshTime.getSeconds() + 5);
 
-    const {data, error, isLoading} = useSWR<Product[]>('/api', fetcher, {
+    const {data} = useSWR<Product[]>('/api', fetcher, {
         refreshInterval: () => {
             const now = new Date();
             const midnightTime = new Date(now);
             midnightTime.setHours(24, 0, 0, 0);
 
             const nextRefesh = midnightTime.getTime() - now.getTime() + 10000;
-            console.log(`${nextRefesh} milliseconds until refresh`);
+            // console.log(`${nextRefesh} milliseconds until refresh`);
             return nextRefesh;
         },
         keepPreviousData: true,
@@ -34,34 +34,40 @@ export default function Page() {
         //revalidateOnReconnect: false,
         //revalidateOnMount: false,
     });
-    if (error) {
-        return (<>
-            <div>its over</div>
-            <div>{error.message}</div>
-        </>);
-    } else if (isLoading) {
-        return (<>
-            <div>LOADING</div>
-        </>);
-    }
-    let db: Orama<typeof OramaProductSchema>
-    db = create({
-        schema: OramaProductSchema,
-    });
+    const db = useMemo(() => {
+        console.log('Initializing db.')
+        const oramaDb = create({
+            schema: OramaProductSchema,
+        });
 
-    data?.forEach(product => {
-        insert(db, ProductPrismaToOrama(product));
-    });
+        data?.forEach(product => {
+            insert(oramaDb, ProductPrismaToOrama(product));
+        });
+        return oramaDb;
+    }, [data]);
 
-    const result = search(db, {term: searchTerm});
+    const products = useMemo(() => {
+        console.log('Searching Orama db...');
+        if (db == undefined) {
+            console.error('No Orama db found');
+            return [];
+        }
+        const result = search(db, {term: searchTerm});
 
-    const syncResult = result as Exclude<
-        typeof result,
-        Promise<unknown>
-    >;
-
-    const products = syncResult.hits.map(h => h.document);
-
+        const syncResult = result as Exclude<
+            typeof result,
+            Promise<unknown>>;
+        return syncResult.hits.map(hit => hit.document);
+    }, [db, searchTerm]);
+    // const result = search(newDb, {term: searchTerm});
+    //
+    // const syncResult = result as Exclude<
+    //     typeof result,
+    //     Promise<unknown>
+    // >;
+    //
+    // const products = syncResult.hits.map(h => h.document);
+    console.log('rendering page');
     return (
         <main className="font-sans text-black max-w-6xl mx-auto w-1/3 mt-2">
             <div className={'flex flex-col flex-1 items-center mt-5 bg-red'}>
@@ -88,4 +94,5 @@ export default function Page() {
             </div>
         </main>
     );
+
 }

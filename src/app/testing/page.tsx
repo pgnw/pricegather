@@ -6,28 +6,23 @@ import Link from "next/link";
 
 export default function Home() {
     const [count, setCount] = useState(0);
-    console.log('re rendering');
     useEffect(() => {
-        console.log('use effect ' + count);
-        return () =>{
-            console.log('return function running');
-        }
-    }, [count]);
 
+    }, []);
     return (
         <main className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans text-black">
+            <label>Count: {count}</label>
             <div>
-                <div className={'block'}>
-                    <label>count: {count}</label>
-                </div>
-                <button className={'border border-black cursor-pointer p-1 m-1'}
-                        onClick={() => setCount(count - 1)}>Go Down
+
+                <button className='m-1 cursor-pointer border p-1 ' onClick={(e) => {
+                    setCount(count - 1);
+                }}>Up
                 </button>
-                <button className={'border border-black cursor-pointer p-1 m-1'}
-                        onClick={() => setCount(count + 1)}>Go Up
+                <button className='m-1 cursor-pointer border p-1' onClick={(e) => {
+                    setCount(count + 1);
+                }}>Down
                 </button>
             </div>
-            <Link className={'text-blue-600 underline hover:text-blue-800'} href='/'>Home</Link>
         </main>
     );
 }
