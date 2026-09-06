@@ -60,24 +60,6 @@ export default function Page() {
         return syncResult.hits.map(hit => hit.document);
     }, [db, searchTerm]);
     console.log('rendering page');
-
-    const prev = useRef({
-        data,
-        db,
-        searchTerm
-    });
-
-    console.log({
-        dataChanged: prev.current.data !== data,
-        dbChanged: prev.current.db !== db,
-        searchTermChanged: prev.current.searchTerm !== searchTerm
-    });
-
-    prev.current = {
-        data,
-        db,
-        searchTerm
-    };
     return (
         <main className="font-sans text-black max-w-6xl mx-auto w-1/3 mt-2">
             <div className={'flex flex-col flex-1 items-center mt-5 bg-red'}>
@@ -103,5 +85,4 @@ export default function Page() {
             </div>
         </main>
     );
-
 }
