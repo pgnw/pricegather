@@ -1,14 +1,16 @@
-import type { NextConfig } from "next";
+import type {NextConfig} from "next";
 
 const nextConfig: NextConfig = {
-  /* config options here */
-  reactCompiler: true,
+    /* config options here */
+    reactCompiler: true,
 
-  serverExternalPackages: [
-    "patchright",
-    "patchright-core",
-    "chromium-bidi",
-  ],
+    serverExternalPackages: [
+        "patchright",
+        "patchright-core",
+        "chromium-bidi",
+        "graphql",
+        "graphql-request",
+    ],
 };
 
 export default nextConfig;
