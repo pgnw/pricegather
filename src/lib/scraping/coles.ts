@@ -1,4 +1,5 @@
 import {chromium} from "patchright";
+import {gql, request} from "graphql-request";
 
 export async function scrapeColes() {
     const browser = await chromium.launch({headless: false});
@@ -31,6 +32,20 @@ export async function scrapeColes() {
         return key;
     })
 
+    const query = gql`
+    query GetShopProductsMenu($storeId: BrandedId!, $withCampaignLinks: Boolean!, $campaignCount: Int) {
+        menuItems: productCategories(
+            storeId: $storeId
+            withCampaignLinks: $withCampaignLinks
+            campaignCount: $campaignCount
+        ) {
+            ...shopProductsMenuFields
+        }
+    }`
 
+    const storeId = 'COL:0584';
+
+    await request('https://www.coles.com.au/api/graphql', query)
     await browser.close();
+    console.log('done');
 }
