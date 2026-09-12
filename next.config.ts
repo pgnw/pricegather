@@ -10,6 +10,8 @@ const nextConfig: NextConfig = {
         "chromium-bidi",
         "graphql",
         "graphql-request",
+        "ky",
+
     ],
 };
 

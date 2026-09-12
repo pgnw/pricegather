@@ -16,6 +16,7 @@
     "dotenv": "^17.4.2",
     "graphql": "^17.0.2",
     "graphql-request": "^7.4.0",
+    "ky": "^2.1.0",
     "next": "16.3.0",
     "patchright": "1.62.2",
     "pg": "^8.23.0",
