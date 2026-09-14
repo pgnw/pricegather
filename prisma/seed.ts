@@ -13,12 +13,21 @@ async function main() {
             }
     });
 
+    const aldi = await prisma.store.upsert({
+        where: {name: "Aldi"},
+        update: {},
+        create:
+            {
+                name: 'Aldi'
+            }
+    })
+
     await createProducts();
 }
 
 async function createProducts() {
         const productsData = [{
-            id: 1,
+            id: "1",
             storeId: 1,
             name: 'Peanut Butter',
             description: 'Peanut butter for u.',
@@ -26,7 +35,7 @@ async function createProducts() {
             price: 3
         },
             {
-                id: 2,
+                id: "2",
                 storeId: 1,
                 name: 'Apple',
                 description: 'Fruit',
@@ -34,7 +43,7 @@ async function createProducts() {
                 price: 1
             },
             {
-                id: 3,
+                id: "3",
                 storeId: 1,
                 name: 'Orange',
                 description: 'Orange',
