@@ -19,9 +19,7 @@ export function TransformAldiAPIProduct(apiProduct: AldiAPIProduct, storeId: num
             {
                 grams = Number(weightSymbol) * 1000;
             }
-
         }
-
     }
 
     let price = 0;
@@ -36,8 +34,6 @@ export function TransformAldiAPIProduct(apiProduct: AldiAPIProduct, storeId: num
         grams: grams,
         price: price,
     }
-
-
 
     return product;
 }
