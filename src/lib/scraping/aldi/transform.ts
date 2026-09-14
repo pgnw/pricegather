@@ -13,11 +13,11 @@ export function TransformAldiAPIProduct(apiProduct: AldiAPIProduct, storeId: num
 
             if (weightSymbol == "g")
             {
-                grams = Number(weightSymbol);
+                grams = Number(weightNumberStr);
             }
             else if (weightSymbol == "kg")
             {
-                grams = Number(weightSymbol) * 1000;
+                grams = Number(weightNumberStr) * 1000;
             }
         }
     }
