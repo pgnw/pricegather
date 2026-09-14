@@ -5,9 +5,23 @@ import {prisma} from "@/lib/prisma";
 export function TransformAldiAPIProduct(apiProduct: AldiAPIProduct, storeId: number): Prisma.ProductCreateManyInput {
     let grams = null;
     if (apiProduct.sellingSize != null) {
-        const getGramsRegex = new RegExp("[0-9]*");
-        const gramsStr = getGramsRegex.exec(apiProduct.sellingSize);
-        grams = Number(gramsStr);
+        const regex = new RegExp("([0-9\.]*)\s*(.*)");
+        const result = regex.exec(apiProduct.sellingSize);
+        if (result != null)
+        {
+            const [, weightNumberStr, weightSymbol] = result;
+
+            if (weightSymbol == "g")
+            {
+                grams = Number(weightSymbol);
+            }
+            else if (weightSymbol == "kg")
+            {
+                grams = Number(weightSymbol) * 1000;
+            }
+
+        }
+
     }
 
     let price = 0;

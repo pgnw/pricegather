@@ -55,6 +55,8 @@ export async function scrapeAldi() {
         batchInsertPromises.push(prisma.product.createMany({data: dbProducts}));
     }
     await Promise.all(batchInsertPromises);
+
+
 }
 
 async function getAldiProducts(offset: number): Promise<AldiAPIResponse> {
