@@ -1,3 +1,5 @@
+import {Prisma} from "@/generated/prisma/client";
+
 export type AldiAPIResponse = {
     meta: {
       pagination:{

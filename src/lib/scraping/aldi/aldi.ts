@@ -33,11 +33,11 @@ export async function scrapeAldi() {
         return TransformAldiAPIProduct(apiProduct, aldiStoreId);
     });
 
-    const batchInsertPromises: PrismaPromise<BatchPayload>[] = [];
-
     // Wait for delete to finalise before adding new products in
     await deleteAldiProductsPromise;
+
     // Add the first batch of products
+    const batchInsertPromises: PrismaPromise<BatchPayload>[] = [];
     batchInsertPromises.push(prisma.product.createMany({data: dbProducts}));
 
     let productsReturned = true;

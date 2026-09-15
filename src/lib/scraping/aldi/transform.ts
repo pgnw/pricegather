@@ -7,24 +7,20 @@ export function TransformAldiAPIProduct(apiProduct: AldiAPIProduct, storeId: num
     if (apiProduct.sellingSize != null) {
         const regex = new RegExp("([0-9\.]*)\\s*(\\S.*)");
         const result = regex.exec(apiProduct.sellingSize);
-        if (result != null)
-        {
+        if (result != null) {
             const [, weightNumberStr, weightSymbol] = result;
 
-            if (weightSymbol == "g" || weightSymbol == "ml")
-            {
+            if (weightSymbol == "g" || weightSymbol == "ml") {
                 grams = Number(weightNumberStr);
-            }
-            else if (weightSymbol == "kg" || weightSymbol == "L")
-            {
+            } else if (weightSymbol == "kg" || weightSymbol == "L") {
                 grams = Number(weightNumberStr) * 1000;
             }
         }
     }
 
-    let price = 0;
+    let price: Prisma.Decimal = Prisma.Decimal(0);
     if (apiProduct.price?.amountRelevant != null) {
-        price = Number(apiProduct.price?.amountRelevant) / 100;
+        price = Prisma.Decimal(apiProduct.price?.amountRelevant).div(Prisma.Decimal(100));
     }
 
     const product = {
