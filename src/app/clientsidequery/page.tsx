@@ -13,21 +13,25 @@ import * as sea from "node:sea";
 
 import {OramaProduct, OramaProductSchema, ProductPrismaToOrama} from '@/lib/Orama';
 
+function getRefreshInterval() {
+
+    const now = new Date();
+    const midnightTime = new Date(now);
+    midnightTime.setHours(24, 0, 0, 0);
+
+    const nextRefesh = midnightTime.getTime() - now.getTime() + 100000;
+
+    return nextRefesh;
+}
+
 export default function Page() {
     const [searchTerm, setSearchTerm] = useState("");
     const refreshTime = new Date();
     refreshTime.setSeconds(refreshTime.getSeconds() + 50);
 
-    const {data} = useSWR<Product[]>('/api', fetcher, {
-        refreshInterval: () => {
-            const now = new Date();
-            const midnightTime = new Date(now);
-            midnightTime.setHours(24, 0, 0, 0);
 
-            const nextRefesh = midnightTime.getTime() - now.getTime() + 10000;
-            // console.log(`${nextRefesh} milliseconds until refresh`);
-            return nextRefesh;
-        },
+    const {data} = useSWR<Product[]>('/api', fetcher, {
+        refreshInterval: getRefreshInterval(),
         keepPreviousData: true,
         //revalidateOnFocus: false,
         //revalidateOnReconnect: false,
