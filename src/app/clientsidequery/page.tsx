@@ -26,19 +26,26 @@ function getRefreshInterval() {
 
 export default function Page() {
     const [searchTerm, setSearchTerm] = useState("");
+    const [data, setData] = useState<Product[]>([]);
     const refreshTime = new Date();
     refreshTime.setSeconds(refreshTime.getSeconds() + 50);
 
+    useEffect(() => {
+        async function load() {
+            console.log('use effect running')
+            const res = await fetch("/api/");
+            const json = await res.json();
 
-    const {data} = useSWR<Product[]>('/api', fetcher, {
-        refreshInterval: getRefreshInterval(),
-        keepPreviousData: true,
-        //revalidateOnFocus: false,
-        //revalidateOnReconnect: false,
-        //revalidateOnMount: false,
-    });
+            setData(json);
+        }
+
+        load();
+    }, []);
+
+
     const db = useMemo(() => {
         console.log('Initializing db.')
+
         const oramaDb = create({
             schema: OramaProductSchema,
         });
@@ -48,6 +55,9 @@ export default function Page() {
         });
         return oramaDb;
     }, [data]);
+
+
+
 
     const products = useMemo(() => {
         console.log('Searching Orama db...');
