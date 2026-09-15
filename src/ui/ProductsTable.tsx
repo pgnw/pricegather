@@ -15,7 +15,7 @@ export default async function ProductsTable(search: { name: string; }) {
                         <label>Description: {product.description}</label>
                     </div>
                     <div className={'block'}>
-                        <label>Cost: {product.price.toString()}</label>
+                        <label>Cost: ${product.price.toString()}</label>
                     </div>
                     <div className={'block'}>
                         <label>Grams: {product.grams}</label>
