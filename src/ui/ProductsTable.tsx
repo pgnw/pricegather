@@ -1,9 +1,9 @@
 'use server';
-import {getProducts} from "@/lib/actions";
+import {Product} from "@/generated/prisma/client";
 
 
-export default async function ProductsTable(search: { name: string; }) {
-    const products = await getProducts(search)
+export default async function ProductsTable({productsPromise}: { productsPromise: Promise<Product[]> }) {
+    const products = await productsPromise;
     return (
         <>
             {products.map((product) => (

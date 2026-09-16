@@ -13,22 +13,9 @@ import * as sea from "node:sea";
 
 import {OramaProduct, OramaProductSchema, ProductPrismaToOrama} from '@/lib/Orama';
 
-function getRefreshInterval() {
-
-    const now = new Date();
-    const midnightTime = new Date(now);
-    midnightTime.setHours(24, 0, 0, 0);
-
-    const nextRefesh = midnightTime.getTime() - now.getTime() + 100000;
-
-    return nextRefesh;
-}
-
 export default function Page() {
     const [searchTerm, setSearchTerm] = useState("");
     const [data, setData] = useState<Product[]>([]);
-    const refreshTime = new Date();
-    refreshTime.setSeconds(refreshTime.getSeconds() + 50);
 
     useEffect(() => {
         async function load() {
@@ -57,15 +44,16 @@ export default function Page() {
     }, [data]);
 
 
-
-
     const products = useMemo(() => {
         console.log('Searching Orama db...');
         if (db == undefined) {
             console.error('No Orama db found');
             return [];
         }
-        const result = search(db, {term: searchTerm});
+        const result = search(db, {
+            term: searchTerm,
+            limit: 5000,
+        });
 
         const syncResult = result as Exclude<
             typeof result,
@@ -73,7 +61,6 @@ export default function Page() {
         return syncResult.hits.map(hit => hit.document);
     }, [db, searchTerm]);
 
-    console.log('rendering page');
     return (
         <main className="font-sans text-black max-w-6xl mx-auto w-1/3 mt-2">
             <div className={'flex flex-col flex-1 items-center mt-5 bg-red'}>
@@ -84,9 +71,9 @@ export default function Page() {
                 <div className={'flex flex-col flex-1  mb-4 bg-gray-200 p-4 w-full'}>
                     <ol>
                         {products.map(product => {
-                            return <Fragment key={product.productId}>
+                            return (<Fragment key={product.productId}>
                                 <div>{product.name}</div>
-                            </Fragment>
+                            </Fragment>)
                         })}
                         {/*{products.map((item) => {*/}
                         {/*    <Fragment key={item.productId}>*/}

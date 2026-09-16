@@ -2,6 +2,7 @@ import {Suspense} from "react";
 import ProductTable from "@/ui/ProductsTable";
 import ProductTableLoading from "@/ui/ProductSearchLoading";
 import SearchBar from "@/ui/SearchBar";
+import {getProducts} from "@/lib/actions";
 
 export default async function Page(props:
                                    {
@@ -9,8 +10,9 @@ export default async function Page(props:
                                            search?: string;
                                        }>;
                                    }) {
-    const searchParams = (await props.searchParams)?.search || "";
-
+    const searchTerm = (await props.searchParams)?.search || "";
+    const products =  getProducts({name: searchTerm});
+    console.log(searchTerm);
     return (
         <main className="font-sans text-black max-w-6xl mx-auto w-1/3 mt-2">
             <div className={'flex flex-col flex-1 items-center mt-5 bg-red'}>
@@ -19,8 +21,8 @@ export default async function Page(props:
                     <Suspense fallback={null}>
                         <SearchBar></SearchBar>
                     </Suspense>
-                    <Suspense key={searchParams} fallback={<ProductTableLoading/>}>
-                        <ProductTable name={searchParams} />
+                    <Suspense key={searchTerm} fallback={<ProductTableLoading/>}>
+                        <ProductTable productsPromise={products}/>
                     </Suspense>
                 </div>
 
