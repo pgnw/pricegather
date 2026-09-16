@@ -1,9 +1,15 @@
-'use server';
+'use client';
 import {Product} from "@/generated/prisma/client";
+import {use} from "react";
 
 
-export default async function ProductsTable({productsPromise}: { productsPromise: Promise<Product[]> }) {
-    const products = await productsPromise;
+export default function ProductsTable({productsPromise}: { productsPromise: Promise<Product[]> | Product[] }) {
+    let products: Product[] = [];
+    if (productsPromise instanceof Promise)
+        products = use(productsPromise);
+    else
+        products = productsPromise;
+
     return (
         <>
             {products.map((product) => (

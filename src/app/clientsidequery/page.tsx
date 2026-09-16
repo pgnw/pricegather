@@ -16,10 +16,10 @@ import {OramaProduct, OramaProductSchema, ProductPrismaToOrama} from '@/lib/Oram
 export default function Page() {
     const [searchTerm, setSearchTerm] = useState("");
     const [data, setData] = useState<Product[]>([]);
+    const [displayProducts, setDisplayProducts] = useState<any[]>([]);
 
     useEffect(() => {
         async function load() {
-            console.log('use effect running')
             const res = await fetch("/api/");
             const json = await res.json();
 
@@ -44,21 +44,38 @@ export default function Page() {
     }, [data]);
 
 
-    const products = useMemo(() => {
-        console.log('Searching Orama db...');
-        if (db == undefined) {
-            console.error('No Orama db found');
-            return [];
-        }
-        const result = search(db, {
-            term: searchTerm,
-            limit: 5000,
-        });
+    // const products = useMemo(() => {
+    //     console.log('Searching Orama db...');
+    //     if (db == undefined) {
+    //         console.error('No Orama db found');
+    //         return [];
+    //     }
+    //     const result = search(db, {
+    //         term: searchTerm,
+    //         limit: 5000,
+    //     });
+    //
+    //     const syncResult = result as Exclude<
+    //         typeof result,
+    //         Promise<unknown>>;
+    //     return syncResult.hits.map(hit => hit.document);
+    // }, [db, searchTerm]);
 
-        const syncResult = result as Exclude<
-            typeof result,
-            Promise<unknown>>;
-        return syncResult.hits.map(hit => hit.document);
+    useEffect(() => {
+        const a = async () => {
+            console.log('Searching Orama db...');
+            if (db == undefined) {
+                console.error('No Orama db found');
+                return [];
+            }
+            const result = search(db, {
+                term: searchTerm,
+                limit: 5000,
+            });
+
+            setDisplayProducts((await result).hits.map(hit => hit.document));
+        };
+        a();
     }, [db, searchTerm]);
 
     return (
@@ -70,11 +87,12 @@ export default function Page() {
                        tabIndex={1}/>
                 <div className={'flex flex-col flex-1  mb-4 bg-gray-200 p-4 w-full'}>
                     <ol>
-                        {products.map(product => {
-                            return (<Fragment key={product.productId}>
-                                <div>{product.name}</div>
-                            </Fragment>)
-                        })}
+                        <ProductTable productsPromise={displayProducts}/>
+                        {/*{products.map(product => {*/}
+                        {/*    return (<Fragment key={product.productId}>*/}
+                        {/*        <div>{product.name}</div>*/}
+                        {/*    </Fragment>)*/}
+                        {/*})}*/}
                         {/*{products.map((item) => {*/}
                         {/*    <Fragment key={item.productId}>*/}
                         {/*        <li>{item.productId + item.name}</li>*/}
