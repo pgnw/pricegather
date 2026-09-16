@@ -1,10 +1,11 @@
 'use client';
 import {Product} from "@/generated/prisma/client";
 import {use} from "react";
+import {OramaProduct} from "@/lib/Orama";
 
 
-export default function ProductsTable({productsPromise}: { productsPromise: Promise<Product[]> | Product[] }) {
-    let products: Product[] = [];
+export default function ProductsTable({productsPromise}: { productsPromise: Promise<OramaProduct[]> | OramaProduct[] }) {
+    let products: OramaProduct[] = [];
     if (productsPromise instanceof Promise)
         products = use(productsPromise);
     else
@@ -13,7 +14,7 @@ export default function ProductsTable({productsPromise}: { productsPromise: Prom
     return (
         <>
             {products.map((product) => (
-                <div key={product.id} className={'flex flex-col border border-gray-400 rounded-md mt-2  '}>
+                <div key={product.productId} className={'flex flex-col border border-gray-400 rounded-md mt-2  '}>
                     <div className={'block'}>
                         <label>Name: {product.name}</label>
                     </div>
