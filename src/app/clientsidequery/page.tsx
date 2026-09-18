@@ -70,7 +70,7 @@ export default function Page() {
             }
             const result = search(db, {
                 term: searchTerm,
-                limit: 5000,
+                limit: 10000,
             });
 
             setDisplayProducts((await result).hits.map(hit => hit.document));
@@ -86,22 +86,10 @@ export default function Page() {
                 <input className={'border black rounded-md m-2'} id='txtSearch'
                        onChange={(e) => setSearchTerm(e.target.value)}
                        tabIndex={1}/>
-                <div className={'flex flex-col flex-1  mb-4 bg-gray-200 p-4 w-full'}>
-                    <ol>
-                        <ProductTable productsPromise={displayProducts}/>
-                        {/*{products.map(product => {*/}
-                        {/*    return (<Fragment key={product.productId}>*/}
-                        {/*        <div>{product.name}</div>*/}
-                        {/*    </Fragment>)*/}
-                        {/*})}*/}
-                        {/*{products.map((item) => {*/}
-                        {/*    <Fragment key={item.productId}>*/}
-                        {/*        <li>{item.productId + item.name}</li>*/}
-                        {/*    </Fragment>*/}
-                        {/*))}*/}
-                    </ol>
+                <div className={'bg-gray-200 w-full px-2 mt-2 rounded-md'}>
+                    {displayProducts.length == 0 && <div className='w-full text-center h-500' >loading...</div>}
+                    <ProductTable productsPromise={displayProducts}/>
                 </div>
-
             </div>
         </main>
     );

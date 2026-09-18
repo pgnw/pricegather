@@ -18,10 +18,11 @@ export default function ProductsTable({productsPromise}: {
         estimateSize: () => 120,
         measureElement: (element) => element.getBoundingClientRect().height,
         gap: 8,
+        overscan: 15
     });
 
     return (
-        <div style={{height: `${rowVirtualizer.getTotalSize()}px`}} className={'w-full relative'}>
+        <div style={{height: `${rowVirtualizer.getTotalSize() + 40}px`}} className={'w-full relative mt-2'}>
             {rowVirtualizer.getVirtualItems().map((v) => {
                 const product = products[v.index];
                 return (
