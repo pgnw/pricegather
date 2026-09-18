@@ -27,7 +27,6 @@ export default function RootLayout({children}: LayoutProps<"/">) {
                 <nav className="flex flex-row ">
                     <Link className={'text-blue-600 underline hover:text-blue-800 m-2'} href="/">Home</Link>
                     <Link className={'text-blue-600 underline hover:text-blue-800 m-2'} href="/testing">Testing Sloppa</Link>
-                    <Link className={'text-blue-600 underline hover:text-blue-800 m-2'} href="/serversidequery">Serverside query</Link>
                     <Link className={'text-blue-600 underline hover:text-blue-800 m-2'} href="/clientsidequery">Clientside query testing</Link>
                 </nav>
                 {children}
