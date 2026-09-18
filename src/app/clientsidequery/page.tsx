@@ -78,6 +78,7 @@ export default function Page() {
         a();
     }, [db, searchTerm]);
 
+
     return (
         <main className="font-sans text-black max-w-6xl mx-auto w-1/3 mt-2">
             <div className={'flex flex-col flex-1 items-center mt-5 bg-red'}>
