@@ -4,6 +4,6 @@ export async function GET(request: Request) {
 
     const productsData = await getProducts();
     const productsJson = productsData;
-
-    return new Response(await JSON.stringify(productsData));
+    return new Response("hello");
+ //   return new Response(await JSON.stringify(productsData));
 }
