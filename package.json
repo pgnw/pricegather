@@ -12,6 +12,7 @@
     "@orama/orama": "^3.1.18",
     "@prisma/adapter-pg": "^7.9.1",
     "@prisma/client": "^7.9.1",
+    "@tanstack/react-virtual": "^3.14.13",
     "chromium-bidi": "^17.0.2",
     "dotenv": "^17.4.2",
     "graphql": "^17.0.2",
