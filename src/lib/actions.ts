@@ -10,21 +10,6 @@ export async function goUp(prevState: number, formData: FormData) {
     return prevState + 1;
 }
 
-
-export async function getProducts(search?: { name: string }): Promise<Product[]> {
-    return await prisma.product.findMany({
-        where: {
-            name: {
-                contains: search?.name ?? '',
-                mode: 'insensitive'
-            }
-        },
-        orderBy: {
-            name: 'asc'
-        }
-    });
-}
-
 export async function getUsers() {
     const users = await prisma.user.findMany();
 

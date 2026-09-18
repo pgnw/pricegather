@@ -1,4 +1,3 @@
-import {Decimal} from "@prisma/client/runtime/client";
 import {Product} from "@/generated/prisma/client";
 
 export const OramaProductSchema = {
@@ -24,7 +23,7 @@ export function ProductPrismaToOrama(product: Product): OramaProduct {
         productId: product.id,
         name: product.name,
         description: product.description || "",
-        price: new Decimal(product.price).toNumber(),
+        price: product.price,
         grams: product.grams || 0,
         hasWeight: product.grams != null,
     };

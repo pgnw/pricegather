@@ -20,7 +20,7 @@ model Product {
   name        String
   description String?
   grams       Int?
-  price       Decimal // TODO replace this with a seperate table to track price changes over time.
+  price       Float // TODO replace this with a seperate table to track price changes over time.
 }
 
 model Store {

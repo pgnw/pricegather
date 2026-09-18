@@ -18,17 +18,12 @@ export function TransformAldiAPIProduct(apiProduct: AldiAPIProduct, storeId: num
         }
     }
 
-    let price: Prisma.Decimal = Prisma.Decimal(0);
-    if (apiProduct.price?.amountRelevant != null) {
-        price = Prisma.Decimal(apiProduct.price?.amountRelevant).div(Prisma.Decimal(100));
-    }
-
     const product = {
         id: apiProduct.sku,
         storeId: storeId,
         name: apiProduct.name,
         grams: grams,
-        price: price,
+        price: apiProduct.price.amountRelevant,
     }
 
     return product;

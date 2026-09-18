@@ -1,5 +1,5 @@
 'use client';
-import {Fragment, Suspense, useEffect, useMemo, useRef, useState} from "react";
+import {Fragment, Suspense, use, useEffect, useMemo, useRef, useState} from "react";
 import ProductTable from "@/ui/ProductsTable";
 import ProductTableLoading from "@/ui/ProductSearchLoading";
 import SearchBar from "@/ui/SearchBar";
@@ -7,17 +7,16 @@ import useSWR from "swr";
 import {fetcher} from "@/lib/fetcher";
 import {Product} from "@/generated/prisma/client";
 import {create, insert, Orama, Results, search} from "@orama/orama"
-import {Decimal} from "@prisma/client/runtime/client";
 import {useSearchParams} from "next/navigation";
 import * as sea from "node:sea";
 
 import {OramaProduct, OramaProductSchema, ProductPrismaToOrama} from '@/lib/Orama';
 
-export default function Product_display(props: {data: OramaProduct[]}) {
+export default function Product_display(props: {data: Promise<Product[]>}) {
     const [searchTerm, setSearchTerm] = useState("");
     const [displayProducts, setDisplayProducts] = useState<any[]>([]);
 
-    const data = props.data;
+    const data =  use(props.data);
 
     const db = useMemo(() => {
         console.log('Initializing db.')
@@ -27,31 +26,13 @@ export default function Product_display(props: {data: OramaProduct[]}) {
         });
 
         data?.forEach(product => {
-            insert(oramaDb, product);
+            insert(oramaDb, ProductPrismaToOrama(product));
         });
         return oramaDb;
     }, [data]);
 
-
-    // const products = useMemo(() => {
-    //     console.log('Searching Orama db...');
-    //     if (db == undefined) {
-    //         console.error('No Orama db found');
-    //         return [];
-    //     }
-    //     const result = search(db, {
-    //         term: searchTerm,
-    //         limit: 5000,
-    //     });
-    //
-    //     const syncResult = result as Exclude<
-    //         typeof result,
-    //         Promise<unknown>>;
-    //     return syncResult.hits.map(hit => hit.document);
-    // }, [db, searchTerm]);
-
     useEffect(() => {
-        const a = async () => {
+        const runSearch = async () => {
             console.log('Searching Orama db...');
             if (db == undefined) {
                 console.error('No Orama db found');
@@ -64,7 +45,7 @@ export default function Product_display(props: {data: OramaProduct[]}) {
 
             setDisplayProducts((await result).hits.map(hit => hit.document));
         };
-        a();
+        runSearch();
     }, [db, searchTerm]);
 
 
