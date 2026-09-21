@@ -31,11 +31,12 @@ export async function createProducts(products: Product[]) {
 }
 
 export async function deleteProductsFromStore(storeId: number) {
-    return prisma.product.deleteMany({
+    const deleteReturn = await prisma.product.deleteMany({
         where: {
             storeId: storeId
         }
     });
+    return deleteReturn.count;
 }
 
 export async function populateStore(storeId: number, products: Product[]) {

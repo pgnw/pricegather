@@ -1,5 +1,5 @@
 import {expect, test, vi} from "vitest";
-import {createProduct, populateStore} from "@/lib/data/products";
+import {createProduct, deleteProductsFromStore, populateStore} from "@/lib/data/products";
 import {prisma} from "@/lib/__mocks__/prisma";
 
 vi.mock("@/lib/prisma");
@@ -48,8 +48,19 @@ test("Get Products", async () => {
     expect(returnedProducts).toStrictEqual(newProducts);
 });
 
+test('Delete Products From Store', async () => {
+    const storeId = 2;
+    const expectedDeleteCount = 5;
 
-test("populates store", async () => {
+    prisma.product.deleteMany.mockResolvedValueOnce({count: expectedDeleteCount});
+
+    const deleteCount =  await deleteProductsFromStore(storeId);
+
+    expect(deleteCount).eql(expectedDeleteCount);
+
+})
+
+test("Populates Store", async () => {
     const storeId = 2;
     const products = [
         {
