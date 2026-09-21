@@ -54,8 +54,12 @@ test('Delete Products From Store', async () => {
 
     prisma.product.deleteMany.mockResolvedValueOnce({count: expectedDeleteCount});
 
-    const deleteCount =  await deleteProductsFromStore(storeId);
+    const deleteCount = await deleteProductsFromStore(storeId);
 
+    expect(prisma.product.deleteMany).toHaveBeenCalledWith({
+        where: {storeId: storeId}
+    });
+    expect(prisma.product.deleteMany).toHaveBeenCalledTimes(1);
     expect(deleteCount).eql(expectedDeleteCount);
 
 })
@@ -73,12 +77,12 @@ test("Populates Store", async () => {
         },
     ];
 
-    prisma.product.deleteMany.mockResolvedValueOnce({ count: 3 });
-    prisma.product.createMany.mockResolvedValueOnce({ count: 1 });
+    prisma.product.deleteMany.mockResolvedValueOnce({count: 3});
+    prisma.product.createMany.mockResolvedValueOnce({count: 1});
 
     prisma.$transaction.mockResolvedValueOnce([
-        { count: 3 },
-        { count: 1 },
+        {count: 3},
+        {count: 1},
     ]);
 
     await populateStore(storeId, products);
