@@ -1,5 +1,5 @@
 import {expect, test, vi} from "vitest";
-import {createProduct, deleteProductsFromStore, populateStore} from "@/lib/data/products";
+import {createProduct, deleteProductsFromStore, getProducts, populateStore} from "@/lib/data/products";
 import {prisma} from "@/lib/__mocks__/prisma";
 
 vi.mock("@/lib/prisma");
@@ -18,7 +18,8 @@ test("make product", async () => {
 
     const product = await createProduct(newProduct);
 
-    expect(product).eql(newProduct);
+    expect(prisma.product.create).toHaveBeenCalledWith({data: newProduct});
+    expect(product).toStrictEqual(newProduct);
 });
 
 test("Get Products", async () => {
@@ -27,7 +28,7 @@ test("Get Products", async () => {
             id: "1",
             grams: 100,
             price: 5,
-            name: "apple",
+            name: "green apple",
             description: "fruit",
             storeId: 2,
         },
@@ -35,17 +36,35 @@ test("Get Products", async () => {
             id: "2",
             grams: 20,
             price: 1,
-            name: "food",
+            name: "red apple",
             description: "desc",
             storeId: 2,
         }
     ];
 
+    const searchName = 'apple';
+    const searchLimit = 10;
+    const searchOffset = 0;
+    const searchOrderby = 'asc';
+
     prisma.product.findMany.mockResolvedValueOnce(newProducts);
 
-    const returnedProducts = await prisma.product.findMany();
+    const returnedProducts = await getProducts(searchName, searchLimit, searchOffset, searchOrderby);
 
     expect(returnedProducts).toStrictEqual(newProducts);
+    expect(prisma.product.findMany).toHaveBeenCalledWith({
+        where: {
+            name: {
+                contains: searchName,
+                mode: "insensitive",
+            },
+        },
+        take: searchLimit,
+        skip: searchOffset,
+        orderBy: {
+            'name': searchOrderby
+        },
+    });
 });
 
 test('Delete Products From Store', async () => {
@@ -59,9 +78,9 @@ test('Delete Products From Store', async () => {
     expect(prisma.product.deleteMany).toHaveBeenCalledWith({
         where: {storeId: storeId}
     });
+
     expect(prisma.product.deleteMany).toHaveBeenCalledTimes(1);
     expect(deleteCount).eql(expectedDeleteCount);
-
 })
 
 test("Populates Store", async () => {

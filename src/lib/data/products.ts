@@ -2,7 +2,7 @@ import {prisma} from "@/lib/prisma";
 import {Product} from "@/generated/prisma/client";
 import {store} from "next/dist/build/output/store";
 
-export async function getProducts(productName?: string, limit?: number, offset?: number): Promise<Product[]> {
+export async function getProducts(productName?: string, limit?: number, offset?: number, orderBy?: string): Promise<Product[]> {
     const productsPromise = prisma.product.findMany({
         where: {
             name: {
@@ -11,7 +11,7 @@ export async function getProducts(productName?: string, limit?: number, offset?:
             }
         },
         orderBy: {
-            name: 'asc'
+            name: orderBy
         },
         take: limit,
         skip: offset
