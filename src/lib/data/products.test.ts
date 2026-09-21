@@ -1,5 +1,5 @@
 import {expect, test, vi} from "vitest";
-import {createProduct} from "@/lib/data/products";
+import {createProduct, populateStore} from "@/lib/data/products";
 import {prisma} from "@/lib/__mocks__/prisma";
 
 vi.mock("@/lib/prisma");
@@ -46,4 +46,41 @@ test("Get Products", async () => {
     const returnedProducts = await prisma.product.findMany();
 
     expect(returnedProducts).toStrictEqual(newProducts);
+});
+
+
+test("populates store", async () => {
+    const storeId = 2;
+    const products = [
+        {
+            id: "1",
+            storeId: storeId,
+            name: "Milk",
+            description: "",
+            grams: 1000,
+            price: 3.99,
+        },
+    ];
+
+    prisma.product.deleteMany.mockResolvedValueOnce({ count: 3 });
+    prisma.product.createMany.mockResolvedValueOnce({ count: 1 });
+
+    prisma.$transaction.mockResolvedValueOnce([
+        { count: 3 },
+        { count: 1 },
+    ]);
+
+    await populateStore(storeId, products);
+
+    expect(prisma.product.deleteMany).toHaveBeenCalledWith({
+        where: {
+            storeId: storeId,
+        },
+    });
+
+    expect(prisma.product.createMany).toHaveBeenCalledWith({
+        data: products,
+    });
+
+    expect(prisma.$transaction).toHaveBeenCalledOnce();
 });
