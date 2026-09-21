@@ -16,13 +16,13 @@ export const prisma =
         log: ["query", "info", "warn", "error"],
     });
 
-// @ts-ignore
-prisma.$on("query", (e) => {
-// @ts-ignore
-    console.log(e.query);
-// @ts-ignore
-    console.log(e.params);
-});
+// // @ts-ignore
+// prisma.$on("query", (e) => {
+// // @ts-ignore
+//     console.log(e.query);
+// // @ts-ignore
+//     console.log(e.params);
+// });
 
 if (process.env.NODE_ENV !== "production") {
     globalForPrisma.prisma = prisma;

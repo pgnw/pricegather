@@ -1,10 +1,8 @@
 import {prisma} from "@/lib/prisma";
 import {Product} from "@/generated/prisma/client";
-import {Orama} from "@orama/orama";
-import {OramaProduct, ProductPrismaToOrama} from "@/lib/Orama";
 
-export async function getProducts(productName?: string, limit?: number, offset?: number  ): Promise<Product[]> {
-    const productsPromise =   prisma.product.findMany({
+export async function getProducts(productName?: string, limit?: number, offset?: number): Promise<Product[]> {
+    const productsPromise = prisma.product.findMany({
         where: {
             name: {
                 contains: productName,
@@ -19,4 +17,10 @@ export async function getProducts(productName?: string, limit?: number, offset?:
     });
 
     return productsPromise;
+}
+
+export async function createProduct(product: Product): Promise<Product> {
+    const newProduct = prisma.product.create({data: product});
+
+    return newProduct;
 }

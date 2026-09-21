@@ -28,7 +28,8 @@
     "**/*.tsx",
     ".next/types/**/*.ts",
     ".next/dev/types/**/*.ts",
-    "**/*.mts"
+    "**/*.mts",
+    "node_modules/.pnpm/vitest@5.0.1_@types+node@20_7dd811afa19613f8a3bee2da2ccc996d/node_modules/vitest/globals.d.ts"
   ],
   "exclude": ["node_modules"]
 }
