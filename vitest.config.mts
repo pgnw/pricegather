@@ -1,4 +1,4 @@
-import { defineConfig } from "vitest/config";
+import {defineConfig} from "vitest/config";
 import path from "node:path";
 
 export default defineConfig({
@@ -9,13 +9,13 @@ export default defineConfig({
     },
     test: {
         environment: "node",
-
         coverage: {
             enabled: true,
             provider: "v8",
             reporter: ["text", "text-summary", "html"],
             include: ["src/**/*.{ts,tsx}"],
-            exclude: ['src/lib/prisma.ts'],
-        }
+            exclude: ['src/lib/prisma.ts', 'src/lib/vitest.setup.ts'],
+        },
+        setupFiles: ['src/lib/vitest.setup.ts'],
     },
 });
