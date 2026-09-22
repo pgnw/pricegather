@@ -11,9 +11,10 @@ export default defineConfig({
         environment: "node",
 
         coverage: {
+            enabled: true,
             provider: "v8",
             reporter: ["text", "text-summary", "html"],
-            include: ["/src/**/*.{ts,tsx}"],
+            include: ["src/**/*.{ts,tsx}"],
         }
     },
 });
