@@ -12,7 +12,7 @@ export async function getProducts(productName?: string, limit?: number, offset?:
             }
         },
         orderBy: {
-            name: orderBy
+            name: orderBy ?? "asc"
         },
         take: limit,
         skip: offset
