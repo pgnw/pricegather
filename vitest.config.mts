@@ -15,6 +15,7 @@ export default defineConfig({
             provider: "v8",
             reporter: ["text", "text-summary", "html"],
             include: ["src/**/*.{ts,tsx}"],
+            exclude: ['src/lib/prisma.ts'],
         }
     },
 });
