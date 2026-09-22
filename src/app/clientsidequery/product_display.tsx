@@ -57,7 +57,6 @@ export default function Product_display(props: {data: Promise<Product[]>}) {
                        onChange={(e) => setSearchTerm(e.target.value)}
                        tabIndex={1}/>
                 <div className={'bg-gray-200 w-full px-2 mt-2 rounded-md'}>
-                    {displayProducts.length == 0 && <div className='w-full text-center h-500' >loading...</div>}
                     <ProductTable productsPromise={displayProducts}/>
                 </div>
             </div>
