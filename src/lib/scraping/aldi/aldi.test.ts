@@ -1,9 +1,8 @@
 import {expect, test, vi} from "vitest";
-import ky from "ky";
 import {scrapeAldi} from "@/lib/scraping/aldi/aldi";
 import {prisma} from "@/lib/__mocks__/prisma";
 
-import {TransformAldiAPIProduct} from "@/lib/scraping/aldi/transform";
+import {transformAldiAPIProduct} from "@/lib/scraping/aldi/transform";
 import {populateStore} from "@/lib/data/products";
 import {mockAldiResponse} from "@/lib/__mocks__/handler";
 
@@ -19,7 +18,7 @@ test('Pulls from Aldi products endpoint', async () => {
     });
 
     const mockProducts = mockAldiResponse.data.map(p => {
-        return TransformAldiAPIProduct(p, aldiStoreId);
+        return transformAldiAPIProduct(p, aldiStoreId);
     });
 
     await scrapeAldi();

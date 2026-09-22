@@ -1,6 +1,6 @@
 import ky from "ky";
 import {AldiAPIResponse} from "@/lib/scraping/aldi/types";
-import {TransformAldiAPIProduct} from "@/lib/scraping/aldi/transform";
+import {transformAldiAPIProduct} from "@/lib/scraping/aldi/transform";
 import {prisma} from "@/lib/prisma";
 import assert from "node:assert";
 import PrismaPromise = Prisma.PrismaPromise;
@@ -21,7 +21,7 @@ export async function scrapeAldi() {
     let res = await getAldiProducts(0);
 
     const products = res.data.map(apiProduct => {
-        return TransformAldiAPIProduct(apiProduct, aldiStoreId);
+        return transformAldiAPIProduct(apiProduct, aldiStoreId);
     });
 
     const totalCount = res.meta.pagination.totalCount;
@@ -36,7 +36,7 @@ export async function scrapeAldi() {
         offset += pageSize;
 
         const returnedProducts = res.data.map(apiProduct => {
-            return TransformAldiAPIProduct(apiProduct, aldiStoreId);
+            return transformAldiAPIProduct(apiProduct, aldiStoreId);
         });
         products.push(...returnedProducts);
     }
