@@ -6,6 +6,7 @@ import assert from "node:assert";
 import PrismaPromise = Prisma.PrismaPromise;
 import {BatchPayload} from "@/generated/prisma/internal/prismaNamespace";
 import {Prisma} from "@/generated/prisma/client";
+import {populateStore} from "@/lib/data/products";
 
 const pageSize = 60;
 
@@ -16,47 +17,31 @@ export async function scrapeAldi() {
         }
     }))?.id;
     assert.ok(aldiStoreId);
-    const deleteAldiProductsPromise = prisma.product.deleteMany({
-        where: {
-            storeId: aldiStoreId
-        }
-    });
 
     let res = await getAldiProducts(0);
 
-    const totalCount = res.meta.pagination.totalCount;
-
-    let products = res.data;
-    let offset = pageSize;
-
-    let dbProducts = products.map(apiProduct => {
+    const products = res.data.map(apiProduct => {
         return TransformAldiAPIProduct(apiProduct, aldiStoreId);
     });
 
-    // Wait for delete to finalise before adding new products in
-    await deleteAldiProductsPromise;
+    const totalCount = res.meta.pagination.totalCount;
+    let offset = pageSize;
 
-    // Add the first batch of products
-    const batchInsertPromises: PrismaPromise<BatchPayload>[] = [];
-    batchInsertPromises.push(prisma.product.createMany({data: dbProducts}));
-
-    let productsReturned = true;
-    while (productsReturned && offset < totalCount) {
+    let wereProductsReturned = true;
+    while (wereProductsReturned && offset < totalCount) {
         // Wait here to avoid spamming the API
         res = await getAldiProducts(offset);
-        products = res.data;
-        productsReturned = products.length > 0;
 
+        wereProductsReturned = res.data.length > 0;
         offset += pageSize;
 
-        dbProducts = products.map(apiProduct => {
+        const returnedProducts = res.data.map(apiProduct => {
             return TransformAldiAPIProduct(apiProduct, aldiStoreId);
         });
-        batchInsertPromises.push(prisma.product.createMany({data: dbProducts}));
+        products.push(...returnedProducts);
     }
-    await Promise.all(batchInsertPromises);
 
-
+    await populateStore(aldiStoreId,products);
 }
 
 async function getAldiProducts(offset: number): Promise<AldiAPIResponse> {

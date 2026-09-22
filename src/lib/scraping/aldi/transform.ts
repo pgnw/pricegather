@@ -1,8 +1,8 @@
 import {AldiAPIProduct} from "@/lib/scraping/aldi/types";
-import {Prisma} from "@/generated/prisma/client";
+import {Prisma, Product} from "@/generated/prisma/client";
 import {prisma} from "@/lib/prisma";
 
-export function TransformAldiAPIProduct(apiProduct: AldiAPIProduct, storeId: number): Prisma.ProductCreateManyInput {
+export function TransformAldiAPIProduct(apiProduct: AldiAPIProduct, storeId: number): Product {
     let grams = null;
     if (apiProduct.sellingSize != null) {
         const regex = new RegExp("([0-9\.]*)\\s*(\\S.*)");
@@ -24,7 +24,7 @@ export function TransformAldiAPIProduct(apiProduct: AldiAPIProduct, storeId: num
         name: apiProduct.name,
         grams: grams,
         price: apiProduct.price.amountRelevant,
-    }
+    } as Product;
 
     return product;
 }
