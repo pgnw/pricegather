@@ -1,8 +1,9 @@
 import {prisma} from "@/lib/prisma";
 import {Product} from "@/generated/prisma/client";
 import {store} from "next/dist/build/output/store";
+import {SortOrder} from "@/generated/prisma/internal/prismaNamespace";
 
-export async function getProducts(productName?: string, limit?: number, offset?: number, orderBy?: string): Promise<Product[]> {
+export async function getProducts(productName?: string, limit?: number, offset?: number, orderBy?: SortOrder): Promise<Product[]> {
     const productsPromise = prisma.product.findMany({
         where: {
             name: {
