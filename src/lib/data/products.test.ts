@@ -1,5 +1,5 @@
 import {expect, test, vi} from "vitest";
-import {createProduct, deleteProductsFromStore, getProducts, populateStore} from "@/lib/data/products";
+import {createProduct, createProducts, deleteProductsFromStore, getProducts, populateStore} from "@/lib/data/products";
 import {prisma} from "@/lib/__mocks__/prisma";
 
 vi.mock("@/lib/prisma");
@@ -118,3 +118,34 @@ test("Populates Store", async () => {
 
     expect(prisma.$transaction).toHaveBeenCalledOnce();
 });
+
+test("Create Products", async () => {
+    const mockProducts = [
+        {
+            id: "1",
+            grams: 100,
+            price: 5,
+            name: "green apple",
+            description: "fruit",
+            storeId: 2,
+        },
+        {
+            id: "2",
+            grams: 20,
+            price: 1,
+            name: "red apple",
+            description: "desc",
+            storeId: 2,
+        }
+    ];
+
+    prisma.product.createMany.mockResolvedValueOnce({count: 2});
+
+    const createdProducts = (await createProducts(mockProducts)).count;
+
+    expect(createdProducts).eql(2);
+    expect(prisma.product.createMany).toHaveBeenCalledOnce();
+    expect(prisma.product.createMany).toHaveBeenCalledWith({data: mockProducts});
+
+
+})
