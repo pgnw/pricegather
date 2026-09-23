@@ -4,7 +4,7 @@ async function main() {
     const start = Date.now();
     console.log("Seeding db");
 
-    const coles = await prisma.store.upsert({
+    const coles =  prisma.store.upsert({
         where: {name: 'Coles'},
         update: {},
         create:
@@ -13,7 +13,7 @@ async function main() {
             }
     });
 
-    const aldi = await prisma.store.upsert({
+    const aldi =  prisma.store.upsert({
         where: {name: "Aldi"},
         update: {},
         create:
@@ -54,7 +54,7 @@ async function createProducts() {
 
         await prisma.product.deleteMany({});
 
-        const products = await prisma.product.createMany(
+        prisma.product.createMany(
             {
                 data: [...productsData],
                 skipDuplicates: false
