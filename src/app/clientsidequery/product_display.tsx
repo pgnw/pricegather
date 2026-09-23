@@ -12,11 +12,11 @@ import * as sea from "node:sea";
 
 import {OramaProduct, OramaProductSchema, ProductPrismaToOrama} from '@/lib/Orama';
 
-export default function Product_display(props: {data: Promise<Product[]>}) {
+export default function Product_display(props: { data: Promise<Product[]> }) {
     const [searchTerm, setSearchTerm] = useState("");
     const [displayProducts, setDisplayProducts] = useState<any[]>([]);
 
-    const data =  use(props.data);
+    const data = use(props.data);
 
     const db = useMemo(() => {
         console.log('Initializing db.')
@@ -57,7 +57,7 @@ export default function Product_display(props: {data: Promise<Product[]>}) {
                        onChange={(e) => setSearchTerm(e.target.value)}
                        tabIndex={1}/>
                 <div className={'bg-gray-200 w-full px-2 mt-2 rounded-md'}>
-                    <ProductTable productsPromise={displayProducts}/>
+                        <ProductTable productsPromise={displayProducts}/>
                 </div>
             </div>
         </main>

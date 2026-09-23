@@ -6,11 +6,15 @@ import Product_display from "@/app/clientsidequery/product_display";
 
 import {OramaProduct, ProductPrismaToOrama} from "@/lib/Orama";
 import {getProducts} from "@/lib/data/products";
+import products_loading from "@/app/clientsidequery/ProductsLoading";
+import ProductsLoading from "@/app/clientsidequery/ProductsLoading";
 
 export default async function page() {
     const data = getProducts();
 
     return (
-        <Product_display data={data} />
+        <Suspense fallback={<ProductsLoading/>}>
+            <Product_display data={data}/>
+        </Suspense>
     );
 }
