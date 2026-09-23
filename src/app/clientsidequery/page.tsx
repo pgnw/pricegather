@@ -10,11 +10,9 @@ import products_loading from "@/app/clientsidequery/ProductsLoading";
 import ProductsLoading from "@/app/clientsidequery/ProductsLoading";
 
 export default async function page() {
-    const data = getProducts();
+    const productsPromise = getProducts();
 
     return (
-        <Suspense fallback={<ProductsLoading/>}>
-            <Product_display data={data}/>
-        </Suspense>
+        <Product_display productsPromise={productsPromise}/>
     );
 }
