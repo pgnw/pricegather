@@ -6,6 +6,7 @@ export const OramaProductSchema = {
     description: "string",
     price: "number",
     grams: "number",
+    priceWeightRatio: "number",
     hasWeight: "boolean",
 } as const;
 
@@ -15,6 +16,7 @@ export type OramaProduct = {
     description: string;
     price: number;
     grams: number;
+    priceWeightRatio: number;
     hasWeight: boolean;
 };
 
@@ -25,6 +27,7 @@ export function ProductPrismaToOrama(product: Product): OramaProduct {
         description: product.description || "",
         price: product.price,
         grams: product.grams || 0,
+        priceWeightRatio: product.grams != undefined ? Math.round( product.price / product.grams * 100) / 100 : 0,
         hasWeight: product.grams != null,
     };
 }

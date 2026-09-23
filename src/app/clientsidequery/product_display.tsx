@@ -93,6 +93,9 @@ function ProductsTable({searchTerm, productsPromise}:
                         <div className={'block'}>
                             <label>Grams: {product.grams}</label>
                         </div>
+                        <div className={'block'}>
+                            <label>Price weight ratio: ${product.priceWeightRatio}</label>
+                        </div>
                     </div>
                 )
             })}
