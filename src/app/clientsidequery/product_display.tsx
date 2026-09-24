@@ -5,27 +5,37 @@ import SearchBar from "@/ui/SearchBar";
 import useSWR from "swr";
 import {fetcher} from "@/lib/fetcher";
 import {Product} from "@/generated/prisma/client";
-import {create, insert, Orama, Results, search} from "@orama/orama"
+import {create, insert, Orama, Results, search, SearchParams} from "@orama/orama"
 import {useSearchParams} from "next/navigation";
 import * as sea from "node:sea";
 
-import {OramaProduct, OramaProductSchema, ProductPrismaToOrama} from '@/lib/Orama';
+import {
+    compareNullableNumber,
+    OramaProduct,
+    OramaProductSchema,
+    ProductPrismaToOrama,
+    SearchOptions
+} from '@/lib/Orama';
 import {useWindowVirtualizer} from "@tanstack/react-virtual";
 import ProductsLoading from "@/app/clientsidequery/ProductsLoading";
 
 export default function Product_display({productsPromise}: { productsPromise: Promise<Product[]> }) {
-    const [searchTerm, setSearchTerm] = useState("");
+    const [searchOptions, setSearchOptions] = useState<SearchOptions>({});
 
     return (
         <main className="font-sans text-black max-w-6xl mx-auto w-1/3 mt-2">
             <div className={'flex flex-col flex-1 items-center mt-5 bg-red'}>
                 <h1 className={'text-2xl font-bold '}>Product Search</h1>
                 <input className={'border black rounded-md m-2'} id='txtSearch'
-                       onChange={(e) => setSearchTerm(e.target.value)}
+                       onChange={(e) => setSearchOptions(prevOptions => ({
+                           ...prevOptions,
+                           searchTerm: e.target.value
+                       }))}
                        tabIndex={1}/>
+                <input type="radio" name="sort" value=""/>
                 <div className={'bg-gray-200 w-full px-2 mt-2 rounded-md'}>
                     <Suspense fallback={<ProductsLoading/>}>
-                        <ProductsTable productsPromise={productsPromise} searchTerm={searchTerm}/>
+                        <ProductsTable productsPromise={productsPromise} searchOptions={searchOptions}/>
                     </Suspense>
                 </div>
             </div>
@@ -33,8 +43,11 @@ export default function Product_display({productsPromise}: { productsPromise: Pr
     );
 }
 
-function ProductsTable({searchTerm, productsPromise}:
-                       { searchTerm: string, productsPromise: Promise<Product[]> }) {
+function ProductsTable({searchOptions, productsPromise}:
+                       {
+                           searchOptions: SearchOptions,
+                           productsPromise: Promise<Product[]>
+                       }) {
     const products = use(productsPromise);
 
     const dbRenderCount = useRef(0);
@@ -54,11 +67,19 @@ function ProductsTable({searchTerm, productsPromise}:
         return oramaDb;
     }, [products]);
 
-
     const resultAsync = search(db, {
-        term: searchTerm,
+        term: searchOptions?.searchTerm,
         limit: 10000,
+        sortBy: (a, b) => {
+            if (searchOptions.sortBy == null)
+                searchOptions.sortBy = "name";
+            const aValue = a[2][searchOptions.sortBy] as number;
+            const bValue = b[2][searchOptions.sortBy] as number;
+
+            return compareNullableNumber(aValue, bValue, searchOptions.sortDirection ?? "DESC");
+        }
     })
+
     const resultSync = resultAsync as Exclude<typeof resultAsync, Promise<unknown>>;
 
     const displayProducts = (resultSync.hits.map(hit => hit.document));

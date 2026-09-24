@@ -7,7 +7,6 @@ export const OramaProductSchema = {
     price: "number",
     grams: "number",
     priceWeightRatio: "number",
-    hasWeight: "boolean",
 } as const;
 
 export type OramaProduct = {
@@ -17,7 +16,6 @@ export type OramaProduct = {
     price: number;
     grams: number;
     priceWeightRatio: number;
-    hasWeight: boolean;
 };
 
 export function ProductPrismaToOrama(product: Product): OramaProduct {
@@ -28,6 +26,27 @@ export function ProductPrismaToOrama(product: Product): OramaProduct {
         price: product.price,
         grams: product.grams || 0,
         priceWeightRatio: product.grams != undefined ? Math.round((product.grams / product.price) * 1000) / 1000 : 0,
-        hasWeight: product.grams != null && product.grams > 0,
     };
+}
+
+export type SearchOptions = {
+    searchTerm?: string;
+    sortBy?: "price" | "grams" | "priceWeightRatio" | 'name';
+    sortDirection?: "ASC" | "DESC";
+}
+
+export function compareNullableNumber(
+    a: number,
+    b: number,
+    direction: "ASC" | "DESC"
+) {
+    const aMissing = a === 0;
+    const bMissing = b === 0;
+
+    if (aMissing && !bMissing) return 1;
+    if (!aMissing && bMissing) return -1;
+
+    return direction === "ASC"
+        ? a - b
+        : b - a;
 }
