@@ -17,7 +17,7 @@ import {
     SearchOptions
 } from '@/lib/Orama';
 import {useWindowVirtualizer} from "@tanstack/react-virtual";
-import ProductsLoading from "@/app/clientsidequery/ProductsLoading";
+import ProductsLoading from "@/ui/ProductsLoading";
 
 export default function Product_display({productsPromise}: { productsPromise: Promise<Product[]> }) {
     const [searchOptions, setSearchOptions] = useState<SearchOptions>({});
@@ -32,7 +32,22 @@ export default function Product_display({productsPromise}: { productsPromise: Pr
                            searchTerm: e.target.value
                        }))}
                        tabIndex={1}/>
-                <input type="radio" name="sort" value=""/>
+                <label>
+                    <input type="radio" name="sort" className="radio radio-sm" value='name' defaultChecked={true}/>
+                    Name
+                </label>
+                <label>
+                    <input type="radio" name="sort" className="radio radio-sm" value='priceWeightRatio'/>
+                    Price per weight
+                </label>
+                <label>
+                    <input type="radio" name="sort" className="radio radio-sm" value='price'/>
+                    Price
+                </label>
+                <label>
+                    <input type="radio" name="sort" className="radio radio-sm" value='grams'/>
+                    Weight
+                </label>
                 <div className={'bg-gray-200 w-full px-2 mt-2 rounded-md'}>
                     <Suspense fallback={<ProductsLoading/>}>
                         <ProductsTable productsPromise={productsPromise} searchOptions={searchOptions}/>
