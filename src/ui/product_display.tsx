@@ -23,31 +23,43 @@ export default function Product_display({productsPromise}: { productsPromise: Pr
     const [searchOptions, setSearchOptions] = useState<SearchOptions>({});
 
     return (
-        <main className="font-sans text-black max-w-6xl mx-auto w-1/3 mt-2">
+        <main className="font-sans text-black max-w-6xl mx-auto w-1/2 mt-2">
             <div className={'flex flex-col flex-1 items-center mt-5 bg-red'}>
-                <h1 className={'text-2xl font-bold '}>Product Search</h1>
-                <input className={'border black rounded-md m-2'} id='txtSearch'
-                       onChange={(e) => setSearchOptions(prevOptions => ({
-                           ...prevOptions,
-                           searchTerm: e.target.value
-                       }))}
-                       tabIndex={1}/>
-                <label>
-                    <input type="radio" name="sort" className="radio radio-sm" value='name' defaultChecked={true}/>
-                    Name
-                </label>
-                <label>
-                    <input type="radio" name="sort" className="radio radio-sm" value='priceWeightRatio'/>
-                    Price per weight
-                </label>
-                <label>
-                    <input type="radio" name="sort" className="radio radio-sm" value='price'/>
-                    Price
-                </label>
-                <label>
-                    <input type="radio" name="sort" className="radio radio-sm" value='grams'/>
-                    Weight
-                </label>
+                <section className={'mb-10'}>
+                    <h1 className={'text-2xl font-bold mb-5 text-center '}>Product Search</h1>
+
+                    <input className={'input m-2 focus:ring-0'} id='txtSearch' placeholder='Search products...'
+                           onChange={(e) => setSearchOptions(prevOptions => ({
+                               ...prevOptions,
+                               searchTerm: e.target.value
+                           }))}
+                           tabIndex={1}/>
+
+                    <div className="rounded-box border border-base-300 bg-base-100 p-1">
+                        <div className="mt-3 flex flex-wrap gap-2">
+                            <div>
+                                <label className="mb-1 block text-sm font-medium">
+                                    Sort by
+                                </label>
+                                <select className="select select-bordered">
+                                    <option>Name</option>
+                                    <option>Price</option>
+                                    <option>Weight</option>
+                                    <option>Price per weight</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label className="mb-1 block text-sm font-medium">
+                                    Direction
+                                </label>
+                                <select className="select select-bordered">
+                                    <option>Ascending</option>
+                                    <option>Descending</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </section>
                 <div className={'bg-gray-200 w-full px-2 mt-2 rounded-md'}>
                     <Suspense fallback={<ProductsLoading/>}>
                         <ProductsTable productsPromise={productsPromise} searchOptions={searchOptions}/>
