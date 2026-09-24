@@ -18,47 +18,78 @@ import {
 } from '@/lib/Orama';
 import {useWindowVirtualizer} from "@tanstack/react-virtual";
 import ProductsLoading from "@/ui/ProductsLoading";
+import {Input} from "@/components/ui/input";
+import {RadioGroup, RadioGroupItem} from "@/components/ui/radio-group";
+import {Label} from "@/components/ui/label";
+import {Field, FieldContent, FieldDescription, FieldLabel, FieldTitle} from "@/components/ui/field";
+import {ToggleGroup, ToggleGroupItem} from "@/components/ui/toggle-group";
 
 export default function Product_display({productsPromise}: { productsPromise: Promise<Product[]> }) {
     const [searchOptions, setSearchOptions] = useState<SearchOptions>({});
 
     return (
         <main className="font-sans text-black max-w-6xl mx-auto w-1/2 mt-2">
-            <div className={'flex flex-col flex-1 items-center mt-5 bg-red'}>
-                <section className={'mb-10'}>
-                    <h1 className={'text-2xl font-bold mb-5 text-center '}>Product Search</h1>
+            <div className={'flex flex-col flex-1 items-center mt-5'}>
+                <h1 className={'text-2xl font-bold mb-10 text-center '}>Product Search</h1>
+                <section className={'mb-1 w-200'}>
+                    <Input className={'mb-3'} placeholder='Product search...'></Input>
+                    {/*<input className={'input m-2 focus:ring-0'} id='txtSearch' placeholder='Search products...'*/}
+                    {/*       onChange={(e) => setSearchOptions(prevOptions => ({*/}
+                    {/*           ...prevOptions,*/}
+                    {/*           searchTerm: e.target.value*/}
+                    {/*       }))}*/}
+                    {/*       tabIndex={1}/>*/}
+                    <div className="flex flex-col gap-4 sm:flex-row rounded-lg border bg-card p-4">
+                        <fieldset>
+                            <legend className="mb-2 text-sm font-medium text-muted-foreground">
+                                Sort by
+                            </legend>
 
-                    <input className={'input m-2 focus:ring-0'} id='txtSearch' placeholder='Search products...'
-                           onChange={(e) => setSearchOptions(prevOptions => ({
-                               ...prevOptions,
-                               searchTerm: e.target.value
-                           }))}
-                           tabIndex={1}/>
+                            <ToggleGroup
+                                defaultValue={["name"]}
+                                variant="outline"
+                                className="justify-start"
+                            >
+                                <ToggleGroupItem value="name">
+                                    Name
+                                </ToggleGroupItem>
 
-                    <div className="rounded-box border border-base-300 bg-base-100 p-1">
-                        <div className="mt-3 flex flex-wrap gap-2">
-                            <div>
-                                <label className="mb-1 block text-sm font-medium">
-                                    Sort by
-                                </label>
-                                <select className="select select-bordered">
-                                    <option>Name</option>
-                                    <option>Price</option>
-                                    <option>Weight</option>
-                                    <option>Price per weight</option>
-                                </select>
-                            </div>
-                            <div>
-                                <label className="mb-1 block text-sm font-medium">
-                                    Direction
-                                </label>
-                                <select className="select select-bordered">
-                                    <option>Ascending</option>
-                                    <option>Descending</option>
-                                </select>
-                            </div>
-                        </div>
+                                <ToggleGroupItem value="price">
+                                    Price
+                                </ToggleGroupItem>
+
+                                <ToggleGroupItem value="grams">
+                                    Weight
+                                </ToggleGroupItem>
+
+                                <ToggleGroupItem value="priceWeightRatio">
+                                    Price / weight
+                                </ToggleGroupItem>
+                            </ToggleGroup>
+                        </fieldset>
+
+                        <fieldset>
+                            <legend className="mb-2 text-sm font-medium text-muted-foreground">
+                                Direction
+                            </legend>
+
+                            <ToggleGroup
+                                defaultValue={["name"]}
+                                variant="outline"
+                            >
+                                <ToggleGroupItem value="asc">
+                                    ↑ Low to high
+                                </ToggleGroupItem>
+
+                                <ToggleGroupItem value="desc">
+                                    ↓ High to low
+                                </ToggleGroupItem>
+                            </ToggleGroup>
+                        </fieldset>
+
+
                     </div>
+
                 </section>
                 <div className={'bg-gray-200 w-full px-2 mt-2 rounded-md'}>
                     <Suspense fallback={<ProductsLoading/>}>
