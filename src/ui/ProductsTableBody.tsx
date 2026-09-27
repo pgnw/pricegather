@@ -75,18 +75,19 @@ export default function ProductsTableBody({
                     ? comparison
                     : -comparison;
             }
+            else {
+                const aValue =
+                    productA[sortBy] as number;
 
-            const aValue =
-                productA[sortBy] as number;
+                const bValue =
+                    productB[sortBy] as number;
 
-            const bValue =
-                productB[sortBy] as number;
-
-            return compareNullableNumber(
-                aValue,
-                bValue,
-                sortDirection
-            );
+                return compareNullableNumber(
+                    aValue,
+                    bValue,
+                    sortDirection
+                );
+            }
         }
     });
 

@@ -47,7 +47,6 @@ export default function ProductDisplay({
     return (
         <main className="mx-auto w-full max-w-5xl px-4 py-10 font-sans">
 
-            {/* Heading */}
             <header className="mb-8">
                 <h1 className="text-2xl font-semibold tracking-tight">
                     Product Search
@@ -58,8 +57,6 @@ export default function ProductDisplay({
                 </p>
             </header>
 
-
-            {/* Search controls */}
             <section className="rounded-md border bg-background p-4">
 
                 <Input
@@ -75,10 +72,8 @@ export default function ProductDisplay({
                     className="mb-5"
                 />
 
-
                 <div className="flex flex-col gap-5 sm:flex-row">
 
-                    {/* Sort field */}
                     <fieldset>
                         <legend className="mb-2 text-xs font-medium text-muted-foreground">
                             Sort by
@@ -98,8 +93,7 @@ export default function ProductDisplay({
                                     ...prev,
                                     sortBy: value as SearchOptions["sortBy"]
                                 }));
-                            }}
-                        >
+                            }}>
                             <ToggleGroupItem value="name">
                                 Name
                             </ToggleGroupItem>
@@ -113,13 +107,12 @@ export default function ProductDisplay({
                             </ToggleGroupItem>
 
                             <ToggleGroupItem value="priceWeightRatio">
-                                $ / 100g
+                                $1 / 100g
                             </ToggleGroupItem>
                         </ToggleGroup>
                     </fieldset>
 
 
-                    {/* Direction */}
                     <fieldset>
                         <legend className="mb-2 text-xs font-medium text-muted-foreground">
                             Direction
@@ -133,20 +126,18 @@ export default function ProductDisplay({
 
                                 if (!value)
                                     return;
-
                                 setSearchOptions(prev => ({
                                     ...prev,
                                     sortDirection:
                                         value as SearchOptions["sortDirection"]
                                 }));
-                            }}
-                        >
+                            }}>
                             <ToggleGroupItem value="ASC">
-                                Low → High
+                                Ascending
                             </ToggleGroupItem>
 
                             <ToggleGroupItem value="DESC">
-                                High → Low
+                                Descending
                             </ToggleGroupItem>
                         </ToggleGroup>
                     </fieldset>
