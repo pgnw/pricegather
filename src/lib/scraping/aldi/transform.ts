@@ -23,7 +23,8 @@ export function transformAldiAPIProduct(apiProduct: AldiAPIProduct, storeId: num
         storeId: storeId,
         name: apiProduct.name,
         grams: grams,
-        price: apiProduct.price.amountRelevant
+        price: apiProduct.price.amountRelevant,
+        url: 'https://www.aldi.com.au/product/' + apiProduct.sku,
     } as Product;
 
     return product;
