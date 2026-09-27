@@ -139,7 +139,7 @@ export default function ProductsTableBody({
                     >
                         <div className="min-w-0">
                             <a
-                                href="da-link"
+                                href={product.url}
                                 target="_blank"
                                 rel="noreferrer"
                                 className="truncate font-medium hover:underline "
