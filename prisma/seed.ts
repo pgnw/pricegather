@@ -4,7 +4,7 @@ async function main() {
     const start = Date.now();
     console.log("Seeding db");
 
-    const coles =  prisma.store.upsert({
+    const coles =  await prisma.store.upsert({
         where: {name: 'Coles'},
         update: {},
         create:
@@ -13,7 +13,7 @@ async function main() {
             }
     });
 
-    const aldi =  prisma.store.upsert({
+    const aldi =  await prisma.store.upsert({
         where: {name: "Aldi"},
         update: {},
         create:
@@ -21,8 +21,6 @@ async function main() {
                 name: 'Aldi'
             }
     })
-
-
 }
 
 async function createProducts() {
