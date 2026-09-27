@@ -1,183 +1,358 @@
 'use client';
-import {Fragment, Suspense, use, useEffect, useMemo, useRef, useState} from "react";
-import ProductTableLoading from "@/ui/ProductSearchLoading";
-import SearchBar from "@/ui/SearchBar";
-import useSWR from "swr";
-import {fetcher} from "@/lib/fetcher";
+
+import {
+    Suspense,
+    use,
+    useMemo,
+    useState
+} from "react";
+
 import {Product} from "@/generated/prisma/client";
-import {create, insert, Orama, Results, search, SearchParams} from "@orama/orama"
-import {useSearchParams} from "next/navigation";
-import * as sea from "node:sea";
+import {create, insert, search} from "@orama/orama";
+import {useWindowVirtualizer} from "@tanstack/react-virtual";
 
 import {
     compareNullableNumber,
-    OramaProduct,
     OramaProductSchema,
     ProductPrismaToOrama,
     SearchOptions
-} from '@/lib/Orama';
-import {useWindowVirtualizer} from "@tanstack/react-virtual";
+} from "@/lib/Orama";
+
 import ProductsLoading from "@/ui/ProductsLoading";
 import {Input} from "@/components/ui/input";
-import {RadioGroup, RadioGroupItem} from "@/components/ui/radio-group";
-import {Label} from "@/components/ui/label";
-import {Field, FieldContent, FieldDescription, FieldLabel, FieldTitle} from "@/components/ui/field";
-import {ToggleGroup, ToggleGroupItem} from "@/components/ui/toggle-group";
+import {
+    ToggleGroup,
+    ToggleGroupItem
+} from "@/components/ui/toggle-group";
+import {cn} from "@/lib/utils";
 
-export default function Product_display({productsPromise}: { productsPromise: Promise<Product[]> }) {
-    const [searchOptions, setSearchOptions] = useState<SearchOptions>({});
+
+export default function ProductDisplay({
+                                           productsPromise
+                                       }: {
+    productsPromise: Promise<Product[]>
+}) {
+    const [searchOptions, setSearchOptions] =
+        useState<SearchOptions>({
+            searchTerm: "",
+            sortBy: "name",
+            sortDirection: "ASC"
+        });
 
     return (
-        <main className="font-sans text-black max-w-6xl mx-auto w-1/2 mt-2">
-            <div className={'flex flex-col flex-1 items-center mt-5'}>
-                <h1 className={'text-2xl font-bold mb-10 text-center '}>Product Search</h1>
-                <section className={'mb-1 w-200'}>
-                    <Input className={'mb-3'} placeholder='Product search...'></Input>
-                    {/*<input className={'input m-2 focus:ring-0'} id='txtSearch' placeholder='Search products...'*/}
-                    {/*       onChange={(e) => setSearchOptions(prevOptions => ({*/}
-                    {/*           ...prevOptions,*/}
-                    {/*           searchTerm: e.target.value*/}
-                    {/*       }))}*/}
-                    {/*       tabIndex={1}/>*/}
-                    <div className="flex flex-col gap-4 sm:flex-row rounded-lg border bg-card p-4">
-                        <fieldset>
-                            <legend className="mb-2 text-sm font-medium text-muted-foreground">
-                                Sort by
-                            </legend>
+        <main className="mx-auto w-full max-w-5xl px-4 py-10 font-sans">
 
-                            <ToggleGroup
-                                defaultValue={["name"]}
-                                variant="outline"
-                                className="justify-start"
-                            >
-                                <ToggleGroupItem value="name">
-                                    Name
-                                </ToggleGroupItem>
+            {/* Heading */}
+            <header className="mb-8">
+                <h1 className="text-2xl font-semibold tracking-tight">
+                    Product Search
+                </h1>
 
-                                <ToggleGroupItem value="price">
-                                    Price
-                                </ToggleGroupItem>
-
-                                <ToggleGroupItem value="grams">
-                                    Weight
-                                </ToggleGroupItem>
-
-                                <ToggleGroupItem value="priceWeightRatio">
-                                    Price / weight
-                                </ToggleGroupItem>
-                            </ToggleGroup>
-                        </fieldset>
-
-                        <fieldset>
-                            <legend className="mb-2 text-sm font-medium text-muted-foreground">
-                                Direction
-                            </legend>
-
-                            <ToggleGroup
-                                defaultValue={["name"]}
-                                variant="outline"
-                            >
-                                <ToggleGroupItem value="asc">
-                                    ↑ Low to high
-                                </ToggleGroupItem>
-
-                                <ToggleGroupItem value="desc">
-                                    ↓ High to low
-                                </ToggleGroupItem>
-                            </ToggleGroup>
-                        </fieldset>
+                <p className="mt-1 text-sm text-muted-foreground">
+                    Search and compare grocery products.
+                </p>
+            </header>
 
 
-                    </div>
+            {/* Search controls */}
+            <section className="rounded-md border bg-background p-4">
 
-                </section>
-                <div className={'bg-gray-200 w-full px-2 mt-2 rounded-md'}>
-                    <Suspense fallback={<ProductsLoading/>}>
-                        <ProductsTable productsPromise={productsPromise} searchOptions={searchOptions}/>
-                    </Suspense>
+                <Input
+                    type="search"
+                    placeholder="Search products..."
+                    value={searchOptions.searchTerm ?? ""}
+                    onChange={(e) =>
+                        setSearchOptions(prev => ({
+                            ...prev,
+                            searchTerm: e.target.value
+                        }))
+                    }
+                    className="mb-5"
+                />
+
+
+                <div className="flex flex-col gap-5 sm:flex-row">
+
+                    {/* Sort field */}
+                    <fieldset>
+                        <legend className="mb-2 text-xs font-medium text-muted-foreground">
+                            Sort by
+                        </legend>
+
+                        <ToggleGroup
+                            value={[searchOptions.sortBy ?? "name"]}
+                            variant="outline"
+                            className="justify-start"
+                            onValueChange={(values) => {
+                                const value = values[0];
+
+                                if (!value)
+                                    return;
+
+                                setSearchOptions(prev => ({
+                                    ...prev,
+                                    sortBy: value as SearchOptions["sortBy"]
+                                }));
+                            }}
+                        >
+                            <ToggleGroupItem value="name">
+                                Name
+                            </ToggleGroupItem>
+
+                            <ToggleGroupItem value="price">
+                                Price
+                            </ToggleGroupItem>
+
+                            <ToggleGroupItem value="grams">
+                                Weight
+                            </ToggleGroupItem>
+
+                            <ToggleGroupItem value="priceWeightRatio">
+                                $ / 100g
+                            </ToggleGroupItem>
+                        </ToggleGroup>
+                    </fieldset>
+
+
+                    {/* Direction */}
+                    <fieldset>
+                        <legend className="mb-2 text-xs font-medium text-muted-foreground">
+                            Direction
+                        </legend>
+
+                        <ToggleGroup
+                            value={[searchOptions.sortDirection ?? "ASC"]}
+                            variant="outline"
+                            onValueChange={(values) => {
+                                const value = values[0];
+
+                                if (!value)
+                                    return;
+
+                                setSearchOptions(prev => ({
+                                    ...prev,
+                                    sortDirection:
+                                        value as SearchOptions["sortDirection"]
+                                }));
+                            }}
+                        >
+                            <ToggleGroupItem value="ASC">
+                                Low → High
+                            </ToggleGroupItem>
+
+                            <ToggleGroupItem value="DESC">
+                                High → Low
+                            </ToggleGroupItem>
+                        </ToggleGroup>
+                    </fieldset>
+
                 </div>
-            </div>
+            </section>
+
+
+            <section className="mt-8">
+                    <h2 className="text-2xl font-semibold tracking-tight">
+                        Products
+                    </h2>
+
+                <Suspense fallback={<ProductsLoading/>}>
+                    <ProductsTable
+                        productsPromise={productsPromise}
+                        searchOptions={searchOptions}
+                    />
+                </Suspense>
+
+            </section>
+
         </main>
     );
 }
 
-function ProductsTable({searchOptions, productsPromise}:
-                       {
-                           searchOptions: SearchOptions,
-                           productsPromise: Promise<Product[]>
-                       }) {
+
+function ProductsTable({
+                           searchOptions,
+                           productsPromise
+                       }: {
+    searchOptions: SearchOptions,
+    productsPromise: Promise<Product[]>
+}) {
     const products = use(productsPromise);
 
-    const dbRenderCount = useRef(0);
 
+    /*
+     * Build Orama once when products change.
+     */
     const db = useMemo(() => {
-        console.log('Initializing db.')
-        console.log(dbRenderCount.current);
-        dbRenderCount.current++;
 
         const oramaDb = create({
-            schema: OramaProductSchema,
+            schema: OramaProductSchema
         });
 
         products.forEach(product => {
-            insert(oramaDb, ProductPrismaToOrama(product));
+            insert(
+                oramaDb,
+                ProductPrismaToOrama(product)
+            );
         });
+
         return oramaDb;
+
     }, [products]);
 
+
+    const sortBy =
+        searchOptions.sortBy ?? "name";
+
+    const sortDirection =
+        searchOptions.sortDirection ?? "ASC";
+
+
     const resultAsync = search(db, {
-        term: searchOptions?.searchTerm,
+        term: searchOptions.searchTerm ?? "",
         limit: 10000,
+
         sortBy: (a, b) => {
-            if (searchOptions.sortBy == null)
-                searchOptions.sortBy = "name";
-            const aValue = a[2][searchOptions.sortBy] as number;
-            const bValue = b[2][searchOptions.sortBy] as number;
 
-            return compareNullableNumber(aValue, bValue, searchOptions.sortDirection ?? "DESC");
+            const productA = a[2];
+            const productB = b[2];
+
+
+            /*
+             * Name needs string sorting.
+             */
+            if (sortBy === "name") {
+
+                const comparison =
+                    productA.name.localeCompare(
+                        productB.name
+                    );
+
+                return sortDirection === "ASC"
+                    ? comparison
+                    : -comparison;
+            }
+
+
+            /*
+             * Other sortable fields are numeric.
+             */
+            const aValue =
+                productA[sortBy] as number;
+
+            const bValue =
+                productB[sortBy] as number;
+
+
+            return compareNullableNumber(
+                aValue,
+                bValue,
+                sortDirection
+            );
         }
-    })
-
-    const resultSync = resultAsync as Exclude<typeof resultAsync, Promise<unknown>>;
-
-    const displayProducts = (resultSync.hits.map(hit => hit.document));
-
-    const rowVirtualizer = useWindowVirtualizer({
-        count: displayProducts.length,
-        estimateSize: () => 120,
-        measureElement: (element) => element.getBoundingClientRect().height,
-        gap: 8,
-        overscan: 15
     });
 
+
+    const result =
+        resultAsync as Exclude<
+            typeof resultAsync,
+            Promise<unknown>
+        >;
+
+
+    const displayProducts =
+        result.hits.map(hit => hit.document);
+
+
+    const rowVirtualizer =
+        useWindowVirtualizer({
+            count: displayProducts.length,
+            estimateSize: () => 68,
+            measureElement: element =>
+                element.getBoundingClientRect().height,
+            overscan: 15
+        });
+
+
     return (
-        <div style={{height: `${rowVirtualizer.getTotalSize() + 40}px`}} className={'w-full relative mt-2'}>
-            {rowVirtualizer.getVirtualItems().map((v) => {
-                const product = displayProducts[v.index];
-                return (
-                    <div key={product.productId}
-                         className={'flex flex-col border border-gray-400 rounded-md absolute top-0 left-0 w-full'}
-                         style={{transform: `translateY(${v.start}px)`}}
-                         ref={rowVirtualizer.measureElement}
-                         data-index={v.index}>
-                        <div className={'block'}>
-                            <label>Name: {product.name}</label>
-                        </div>
-                        <div className={'block'}>
-                            <label>Description: {product.description}</label>
-                        </div>
-                        <div className={'block'}>
-                            <label>Cost: ${product.price.toString()}</label>
-                        </div>
-                        <div className={'block'}>
-                            <label>Grams: {product.grams}</label>
-                        </div>
-                        <div className={'block'}>
-                            <label>Price weight ratio: ${product.priceWeightRatio}</label>
-                        </div>
-                    </div>
-                )
-            })}
-        </div>
+        <>
+            <p className="text-sm text-muted-foreground mb-1">
+                {displayProducts.length} results
+            </p>
+            <div
+                className={cn(
+                    "grid",
+                    "grid-cols-[minmax(300px,1fr)_120px_120px_120px]",
+                    "gap-4 rounded-t-md border bg-muted/40",
+                    "px-4 py-3 text-sm font-medium text-muted-foreground"
+                )}
+            >
+                <span>Product</span>
+                <span>Weight</span>
+                <span>Price</span>
+                <span>$ / 100g</span>
+            </div>
+
+            <div
+                className="relative w-full border-x border-b"
+                style={{
+                    height:
+                        `${rowVirtualizer.getTotalSize()}px`
+                }}
+            >
+                {rowVirtualizer
+                    .getVirtualItems()
+                    .map((virtualRow) => {
+
+                        const product =
+                            displayProducts[
+                                virtualRow.index
+                                ];
+
+                        return (
+                            <div
+                                key={product.productId}
+                                ref={rowVirtualizer.measureElement}
+                                data-index={virtualRow.index}
+                                className={cn(
+                                    "absolute left-0 top-0 grid w-full",
+                                    "grid-cols-[minmax(300px,1fr)_120px_120px_120px]",
+                                    "items-center gap-4 border-b bg-background",
+                                    "px-4 py-3 text-sm hover:bg-muted/30"
+                                )}
+                                style={{
+                                    transform: `translateY(${virtualRow.start}px)`
+                                }}
+                            >
+                                <div className="min-w-0">
+                                    <a
+                                        href="da-link"
+                                        target="_blank"
+                                        rel="noreferrer"
+                                        className="truncate font-medium hover:underline"
+                                    >
+                                        {product.name}
+                                    </a>
+                                </div>
+
+                                <div className="text-muted-foreground">
+                                    {product.grams > 0
+                                        ? `${product.grams}g`
+                                        : "—"}
+                                </div>
+
+                                <div className="font-medium">
+                                    ${product.price.toFixed(2)}
+                                </div>
+
+                                <div className="text-muted-foreground">
+                                    {product.priceWeightRatio > 0
+                                        ? `$${product.priceWeightRatio.toFixed(2)}`
+                                        : "—"}
+                                </div>
+                            </div>
+                        );
+                    })}
+            </div>
+        </>
     );
 }
