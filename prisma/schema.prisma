@@ -21,6 +21,7 @@ model Product {
   description String?
   grams       Int?
   price       Float // TODO replace this with a seperate table to track price changes over time.
+  url         String
 }
 
 model Store {
