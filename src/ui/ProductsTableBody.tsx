@@ -142,7 +142,7 @@ export default function ProductsTableBody({
                                 href="da-link"
                                 target="_blank"
                                 rel="noreferrer"
-                                className="truncate font-medium hover:underline"
+                                className="truncate font-medium hover:underline "
                             >
                                 {product.name}
                             </a>
@@ -155,7 +155,7 @@ export default function ProductsTableBody({
                         </div>
 
                         <div className="font-medium">
-                            ${product.price.toFixed(2)}
+                            ${(product.price/100).toFixed(2)}
                         </div>
 
                         <div className="text-muted-foreground">
