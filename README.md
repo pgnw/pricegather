@@ -1,36 +1,53 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# PriceGather
 
-## Getting Started
+Search and compare grocery products from major Australian supermarkets.
 
-First, run the development server:
+Built with Next.js, PostgreSQL, Prisma and Orama.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+<!-- Add these once deployed -->
+<!-- [Live Demo](https://...) · [Screenshots](#screenshots) -->
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## About
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+PriceGather is a grocery product search and comparison application.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Product data is collected from Australian supermarket APIs, normalised and stored in PostgreSQL. The data is loaded by Next.js and searched client-side using Orama, allowing products to be searched and sorted without making a new server request for every query.
 
-## Learn More
+## Features
 
-To learn more about Next.js, take a look at the following resources:
+- Fast client-side product search
+- Compare products from multiple supermarkets
+- Sort by name, price, weight and price per 100g
+- Unit-price comparison
+- Virtualised results for large product catalogues
+- Server-side data loading with React Suspense
+- Automated product ingestion
+- Responsive UI built with shadcn/ui
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## How it works
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+```text
+Supermarket APIs
+       │
+       ▼
+Data ingestion
+       │
+       ▼
+Normalisation
+       │
+       ▼
+Prisma ──► PostgreSQL
+              │
+              ▼
+           Next.js
+              │
+        RSC / Streaming
+              │
+              ▼
+        React Client
+              │
+              ▼
+        Orama Search
+              │
+              ▼
+     Virtualised Results
