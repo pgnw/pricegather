@@ -6,7 +6,7 @@ PriceGather is a grocery product search and comparison app for major Australian 
 
 
 <img
-  src="[YOUR_IMAGE_URL](https://github.com/user-attachments/assets/7494e688-7e80-4f59-8ffd-5b310295f8d7)"
+  src="https://github.com/user-attachments/assets/7494e688-7e80-4f59-8ffd-5b310295f8d7"
   alt="PriceGather product search showing apple results"
   width="850"
 />
