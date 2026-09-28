@@ -49,15 +49,19 @@ export default function ProductDisplay({
     return (
         <main className="mx-auto w-full max-w-5xl px-4 py-10 font-sans">
 
-            <header className="mb-8">
-                <h1 className="text-2xl font-semibold tracking-tight">
+            <header className="mb-8 max-w-2xl">
+                <h1 className="text-3xl font-semibold tracking-tight">
                     Product Search
                 </h1>
 
-                <div className="mb-6 space-y-1 text-sm text-muted-foreground">
-                    <p>Search for a grocery product using the box below.</p>
-                    <p>Use the sorting controls to compare products by price, weight, or value.</p>
-                </div>
+                <p className="mt-2 text-base text-muted-foreground">
+                    Compare products from major Australian supermarkets.
+                </p>
+
+                <p className="mt-1 text-sm leading-relaxed text-muted-foreground">
+                    Search for what you need, then sort by name, price, weight, or price per 100g
+                    to compare value.
+                </p>
             </header>
 
             <section className="rounded-md border bg-background p-4">
@@ -161,7 +165,8 @@ export default function ProductDisplay({
                 <ProductsTableHeader/>
 
                 <Suspense fallback={<ProductsTableBodyLoading/>}>
-                    <ProductsTableBody productsPromise={productsPromise} searchOptions={searchOptions} onCountChange={setReturnedProductsCount}/>
+                    <ProductsTableBody productsPromise={productsPromise} searchOptions={searchOptions}
+                                       onCountChange={setReturnedProductsCount}/>
                 </Suspense>
 
             </section>
