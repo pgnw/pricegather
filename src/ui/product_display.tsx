@@ -47,7 +47,7 @@ export default function ProductDisplay({
 
 
     return (
-        <main className="mx-auto w-full max-w-5xl px-4 py-10 font-sans">
+        <main className="mx-auto w-full h-full max-w-5xl px-4 py-10 font-sans">
 
             <header className="mb-8 max-w-2xl">
                 <h1 className="text-3xl font-semibold tracking-tight">
