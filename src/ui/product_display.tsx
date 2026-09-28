@@ -114,7 +114,7 @@ export default function ProductDisplay({
                             </ToggleGroupItem>
 
                             <ToggleGroupItem value="priceWeightRatio">
-                                $1 / 100g
+                                $ / 100g
                             </ToggleGroupItem>
                         </ToggleGroup>
                     </fieldset>
