@@ -93,9 +93,9 @@ export default function ProductsTableBody({
 
     const displayProducts =
         result.hits.map(hit => hit.document);
-
+    // TODO FIX
     //onCountChange(result.hits.length);
-
+    // TODO FIX HEIGHT TOO HIGH
     const rowVirtualizer =
         useWindowVirtualizer({
             count: displayProducts.length,

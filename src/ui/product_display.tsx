@@ -54,9 +54,10 @@ export default function ProductDisplay({
                     Product Search
                 </h1>
 
-                <p className="mt-1 text-sm text-muted-foreground">
-                    Search and compare grocery products.
-                </p>
+                <div className="mb-6 space-y-1 text-sm text-muted-foreground">
+                    <p>Search for a grocery product using the box below.</p>
+                    <p>Use the sorting controls to compare products by price, weight, or value.</p>
+                </div>
             </header>
 
             <section className="rounded-md border bg-background p-4">
