@@ -1,20 +1,20 @@
 # PriceGather
 
-Search and compare grocery products from major Australian supermarkets.
+PriceGather is a grocery product search and comparison app for major Australian supermarkets.
 
-**Live site:** https://pricegather.vercel.app/
+[Live Demo](https://pricegather.vercel.app/)
 
-Built with Next.js, PostgreSQL, Prisma and Orama.
+It collects supermarket product data, stores it in PostgreSQL, and provides fast client-side search and sorting so products can be compared by price, weight, and price per 100g.
 
 ## Features
 
-- Fast client-side product search
-- Sort by name, price, weight and price per 100g
+- Search supermarket products
+- Sort by name, price, weight, or price per 100g
 - Compare unit prices
 - Virtualised results for large product lists
 - Automated product ingestion
 
-## How it works
+## How It Works
 
 ```text
 Supermarket APIs
@@ -34,71 +34,55 @@ Virtualised results
 
 Product data is collected from supermarket APIs and stored in PostgreSQL.
 
-Next.js loads the products server-side and streams them to the client, where Orama handles fast searching and sorting.
+Next.js loads the products server-side and streams them to the client. Orama then indexes the products in the browser for fast searching and sorting, while TanStack Virtual keeps large result lists responsive.
 
 ## Tech Stack
 
+### Core
 - Next.js
 - React
 - TypeScript
 - PostgreSQL
 - Prisma
+
+### Libraries
 - Orama
 - TanStack Virtual
 - Tailwind CSS
 - shadcn/ui
 - Vitest
 
-## Requirements
+## Getting Started
 
-Before running the project, you will need:
+### Requirements
 
 - Node.js
 - pnpm
 - PostgreSQL
 - A configured `.env` file
 
-Example:
-
 ```env
 DATABASE_URL="postgresql://user:password@localhost:5432/pricegather"
 ```
 
-## Local Development
-
-Install dependencies:
+### Run Locally
 
 ```bash
 pnpm install
-```
-
-Generate the Prisma client:
-
-```bash
 pnpm prisma generate
-```
-
-Run database migrations:
-
-```bash
 pnpm prisma migrate dev
-```
-
-Start the development server:
-
-```bash
 pnpm dev
 ```
 
-## Testing
+Open `http://localhost:3000`.
 
-Run tests:
+## Testing
 
 ```bash
 pnpm vitest
 ```
 
-Run tests with coverage:
+With coverage:
 
 ```bash
 pnpm vitest --coverage
