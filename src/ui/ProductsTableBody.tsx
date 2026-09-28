@@ -95,13 +95,11 @@ export default function ProductsTableBody({
         result.hits.map(hit => hit.document);
     // TODO FIX
     //onCountChange(result.hits.length);
-    // TODO FIX HEIGHT TOO HIGH
+
     const rowVirtualizer =
         useWindowVirtualizer({
             count: displayProducts.length,
-            estimateSize: () => 68,
-            measureElement: element =>
-                element.getBoundingClientRect().height,
+            estimateSize: () => 32,
             overscan: 50
         });
 
