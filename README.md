@@ -1,36 +1,73 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# PriceGather
+
+PriceGather is a grocery product search and comparison app for major Australian supermarkets.
+
+[Live Site](https://pricegather.vercel.app/)
+
+<img
+  src="https://github.com/user-attachments/assets/7494e688-7e80-4f59-8ffd-5b310295f8d7"
+  alt="PriceGather product search showing apple results"
+  width="850"
+/>
+
+Product data is collected from supermarket APIs, stored in PostgreSQL, and searched client-side with Orama for fast filtering and sorting.
+
+## Features
+
+- Search supermarket products
+- Sort by name, price, weight, or price per 100g
+- Compare unit prices
+- Virtualised results for large product lists
+- Automated product ingestion
+
+## Tech Stack
+
+### Core
+- Next.js
+- React
+- TypeScript
+- PostgreSQL
+- Prisma
+
+### Search, UI & Testing
+- Orama
+- TanStack Virtual
+- Tailwind CSS
+- shadcn/ui
+- Vitest
 
 ## Getting Started
 
-First, run the development server:
+### Requirements
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+- Node.js
+- pnpm
+- PostgreSQL
+- A configured `.env` file
+
+```env
+DATABASE_URL="postgresql://user:password@localhost:5432/pricegather"
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### Run Locally
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```bash
+pnpm install
+pnpm prisma generate
+pnpm prisma migrate dev
+pnpm dev
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Open `http://localhost:3000`.
 
-## Learn More
+## Testing
 
-To learn more about Next.js, take a look at the following resources:
+```bash
+pnpm vitest
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Run with coverage:
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+```bash
+pnpm vitest --coverage
+```
