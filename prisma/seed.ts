@@ -23,42 +23,42 @@ async function main() {
     })
 }
 
-async function createProducts() {
-        const productsData = [{
-            id: "1",
-            storeId: 1,
-            name: 'Peanut Butter',
-            description: 'Peanut butter for u.',
-            grams: 200,
-            price: 3
-        },
-            {
-                id: "2",
-                storeId: 1,
-                name: 'Apple',
-                description: 'Fruit',
-                grams: 150,
-                price: 1
-            },
-            {
-                id: "3",
-                storeId: 1,
-                name: 'Orange',
-                description: 'Orange',
-                grams: 100,
-                price: 1.5
-            }
-            ];
-
-        await prisma.product.deleteMany({});
-
-        prisma.product.createMany(
-            {
-                data: [...productsData],
-                skipDuplicates: false
-            });
-
-}
+// async function createProducts() {
+//         const productsData = [{
+//             id: "1",
+//             storeId: 1,
+//             name: 'Peanut Butter',
+//             description: 'Peanut butter for u.',
+//             grams: 200,
+//             price: 3
+//         },
+//             {
+//                 id: "2",
+//                 storeId: 1,
+//                 name: 'Apple',
+//                 description: 'Fruit',
+//                 grams: 150,
+//                 price: 1
+//             },
+//             {
+//                 id: "3",
+//                 storeId: 1,
+//                 name: 'Orange',
+//                 description: 'Orange',
+//                 grams: 100,
+//                 price: 1.5
+//             }
+//             ];
+//
+//         await prisma.product.deleteMany({});
+//
+//         prisma.product.createMany(
+//             {
+//                 data: [...productsData],
+//                 skipDuplicates: false
+//             });
+//
+// }
 
 main()
     .then(async () => {
