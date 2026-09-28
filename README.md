@@ -2,52 +2,104 @@
 
 Search and compare grocery products from major Australian supermarkets.
 
+**Live site:** https://pricegather.vercel.app/
+
 Built with Next.js, PostgreSQL, Prisma and Orama.
-
-<!-- Add these once deployed -->
-<!-- [Live Demo](https://...) · [Screenshots](#screenshots) -->
-
-## About
-
-PriceGather is a grocery product search and comparison application.
-
-Product data is collected from Australian supermarket APIs, normalised and stored in PostgreSQL. The data is loaded by Next.js and searched client-side using Orama, allowing products to be searched and sorted without making a new server request for every query.
 
 ## Features
 
 - Fast client-side product search
-- Compare products from multiple supermarkets
 - Sort by name, price, weight and price per 100g
-- Unit-price comparison
-- Virtualised results for large product catalogues
-- Server-side data loading with React Suspense
+- Compare unit prices
+- Virtualised results for large product lists
 - Automated product ingestion
-- Responsive UI built with shadcn/ui
 
 ## How it works
 
 ```text
 Supermarket APIs
-       │
-       ▼
+      ↓
 Data ingestion
-       │
-       ▼
-Normalisation
-       │
-       ▼
-Prisma ──► PostgreSQL
-              │
-              ▼
-           Next.js
-              │
-        RSC / Streaming
-              │
-              ▼
-        React Client
-              │
-              ▼
-        Orama Search
-              │
-              ▼
-     Virtualised Results
+      ↓
+Prisma
+      ↓
+PostgreSQL
+      ↓
+Next.js
+      ↓
+Orama
+      ↓
+Virtualised results
+```
+
+Product data is collected from supermarket APIs and stored in PostgreSQL.
+
+Next.js loads the products server-side and streams them to the client, where Orama handles fast searching and sorting.
+
+## Tech Stack
+
+- Next.js
+- React
+- TypeScript
+- PostgreSQL
+- Prisma
+- Orama
+- TanStack Virtual
+- Tailwind CSS
+- shadcn/ui
+- Vitest
+
+## Requirements
+
+Before running the project, you will need:
+
+- Node.js
+- pnpm
+- PostgreSQL
+- A configured `.env` file
+
+Example:
+
+```env
+DATABASE_URL="postgresql://user:password@localhost:5432/pricegather"
+```
+
+## Local Development
+
+Install dependencies:
+
+```bash
+pnpm install
+```
+
+Generate the Prisma client:
+
+```bash
+pnpm prisma generate
+```
+
+Run database migrations:
+
+```bash
+pnpm prisma migrate dev
+```
+
+Start the development server:
+
+```bash
+pnpm dev
+```
+
+## Testing
+
+Run tests:
+
+```bash
+pnpm vitest
+```
+
+Run tests with coverage:
+
+```bash
+pnpm vitest --coverage
+```
