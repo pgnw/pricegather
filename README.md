@@ -4,14 +4,13 @@ PriceGather is a grocery product search and comparison app for major Australian 
 
 [Live Site](https://pricegather.vercel.app/)
 
-
 <img
   src="https://github.com/user-attachments/assets/7494e688-7e80-4f59-8ffd-5b310295f8d7"
   alt="PriceGather product search showing apple results"
   width="850"
 />
 
-It collects supermarket product data, stores it in PostgreSQL, and provides fast client-side search and sorting so products can be compared by price, weight, and price per 100g.
+Product data is collected from supermarket APIs, stored in PostgreSQL, and searched client-side with Orama for fast filtering and sorting.
 
 ## Features
 
@@ -20,28 +19,6 @@ It collects supermarket product data, stores it in PostgreSQL, and provides fast
 - Compare unit prices
 - Virtualised results for large product lists
 - Automated product ingestion
-
-## How It Works
-
-```text
-Supermarket APIs
-      ↓
-Data ingestion
-      ↓
-Prisma
-      ↓
-PostgreSQL
-      ↓
-Next.js
-      ↓
-Orama
-      ↓
-Virtualised results
-```
-
-Product data is collected from supermarket APIs and stored in PostgreSQL.
-
-Next.js loads the products server-side and streams them to the client. Orama then indexes the products in the browser for fast searching and sorting, while TanStack Virtual keeps large result lists responsive.
 
 ## Tech Stack
 
@@ -52,7 +29,7 @@ Next.js loads the products server-side and streams them to the client. Orama the
 - PostgreSQL
 - Prisma
 
-### Libraries
+### Search, UI & Testing
 - Orama
 - TanStack Virtual
 - Tailwind CSS
@@ -89,7 +66,7 @@ Open `http://localhost:3000`.
 pnpm vitest
 ```
 
-With coverage:
+Run with coverage:
 
 ```bash
 pnpm vitest --coverage
