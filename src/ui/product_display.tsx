@@ -158,9 +158,9 @@ export default function ProductDisplay({
                     Products
                 </h2>
 
-                <Suspense fallback={<ProductsTableLoadedCountLoading/>}>
-                    <ProductsTableLoadedCount count={returnedProductsCount}/>
-                </Suspense>
+                {/*<Suspense fallback={<ProductsTableLoadedCountLoading/>}>*/}
+                {/*    <ProductsTableLoadedCount count={returnedProductsCount}/>*/}
+                {/*</Suspense>*/}
 
                 <ProductsTableHeader/>
 
