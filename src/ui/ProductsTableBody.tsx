@@ -1,6 +1,6 @@
 import {useWindowVirtualizer} from "@tanstack/react-virtual";
 import {Product} from "@/generated/prisma/client";
-import {use, useMemo} from "react";
+import React, {use, useMemo} from "react";
 import {create, insert, search} from "@orama/orama";
 import {
     compareNullableNumber,
@@ -20,16 +20,15 @@ import ProductsTableHeader from "@/ui/ProductsTableHeader";
 
 export default function ProductsTableBody({
                                               searchOptions,
-                                              productsPromise
+                                              productsPromise,
+                                              onCountChange,
                                           }: {
     searchOptions: SearchOptions,
-    productsPromise: Promise<Product[]>
+    productsPromise: Promise<Product[]>,
+    onCountChange: React.Dispatch<React.SetStateAction<number>>,
 }) {
     const products = use(productsPromise);
 
-    /*
-     * Build Orama once when products change.
-     */
     const db = useMemo(() => {
 
         const oramaDb = create({
@@ -74,8 +73,7 @@ export default function ProductsTableBody({
                 return sortDirection === "ASC"
                     ? comparison
                     : -comparison;
-            }
-            else {
+            } else {
                 const aValue =
                     productA[sortBy] as number;
 
@@ -96,6 +94,7 @@ export default function ProductsTableBody({
     const displayProducts =
         result.hits.map(hit => hit.document);
 
+    //onCountChange(result.hits.length);
 
     const rowVirtualizer =
         useWindowVirtualizer({
@@ -103,7 +102,7 @@ export default function ProductsTableBody({
             estimateSize: () => 68,
             measureElement: element =>
                 element.getBoundingClientRect().height,
-            overscan: 15
+            overscan: 50
         });
 
     return (<div
@@ -155,7 +154,7 @@ export default function ProductsTableBody({
                         </div>
 
                         <div className="font-medium">
-                            ${(product.price/100).toFixed(2)}
+                            ${(product.price / 100).toFixed(2)}
                         </div>
 
                         <div className="text-muted-foreground">

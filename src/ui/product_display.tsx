@@ -43,6 +43,8 @@ export default function ProductDisplay({
             sortBy: "name",
             sortDirection: "ASC"
         });
+    const [returnedProductsCount, setReturnedProductsCount] = useState(0);
+
 
     return (
         <main className="mx-auto w-full max-w-5xl px-4 py-10 font-sans">
@@ -152,13 +154,13 @@ export default function ProductDisplay({
                 </h2>
 
                 <Suspense fallback={<ProductsTableLoadedCountLoading/>}>
-                    <ProductsTableLoadedCount productsPromise={productsPromise}/>
+                    <ProductsTableLoadedCount count={returnedProductsCount}/>
                 </Suspense>
 
                 <ProductsTableHeader/>
 
                 <Suspense fallback={<ProductsTableBodyLoading/>}>
-                    <ProductsTableBody productsPromise={productsPromise} searchOptions={searchOptions}/>
+                    <ProductsTableBody productsPromise={productsPromise} searchOptions={searchOptions} onCountChange={setReturnedProductsCount}/>
                 </Suspense>
 
             </section>
