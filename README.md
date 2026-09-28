@@ -2,7 +2,7 @@
 
 PriceGather is a grocery product search and comparison app for major Australian supermarkets.
 
-[Live Demo](https://pricegather.vercel.app/)
+[Live Site](https://pricegather.vercel.app/)
 
 It collects supermarket product data, stores it in PostgreSQL, and provides fast client-side search and sorting so products can be compared by price, weight, and price per 100g.
 
