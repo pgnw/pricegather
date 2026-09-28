@@ -12,6 +12,7 @@ test("make product", async () => {
         name: "food",
         description: "desc",
         storeId: 2,
+        url: '0229'
     };
 
     prisma.product.create.mockResolvedValueOnce(newProduct);
@@ -31,6 +32,7 @@ test("Get Products", async () => {
             name: "green apple",
             description: "fruit",
             storeId: 2,
+            url: 'green_apple'
         },
         {
             id: "2",
@@ -39,6 +41,7 @@ test("Get Products", async () => {
             name: "red apple",
             description: "desc",
             storeId: 2,
+            url: 'red_apple'
         }
     ];
 
@@ -93,6 +96,7 @@ test("Populates Store", async () => {
             description: "",
             grams: 1000,
             price: 3.99,
+            url: 'milk_'
         },
     ];
 
@@ -128,6 +132,7 @@ test("Create Products", async () => {
             name: "green apple",
             description: "fruit",
             storeId: 2,
+            url: 'green_apple',
         },
         {
             id: "2",
@@ -136,6 +141,7 @@ test("Create Products", async () => {
             name: "red apple",
             description: "desc",
             storeId: 2,
+            url: 'red_apple',
         }
     ];
 
