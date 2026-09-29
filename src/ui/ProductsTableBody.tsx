@@ -17,6 +17,7 @@ import {
 } from "@/components/ui/toggle-group";
 import {cn} from "@/lib/utils";
 import ProductsTableHeader from "@/ui/ProductsTableHeader";
+import {ProductWithMeasurement} from "@/lib/data/products";
 
 export default function ProductsTableBody({
                                               searchOptions,
@@ -24,10 +25,10 @@ export default function ProductsTableBody({
                                               onCountChange,
                                           }: {
     searchOptions: SearchOptions,
-    productsPromise: Promise<Product[]>,
+    productsPromise: Promise<ProductWithMeasurement[]>,
     onCountChange: React.Dispatch<React.SetStateAction<number>>,
 }) {
-    'use no memo';
+    'use no memo'; // Need this due to tanstack virtual breaking
     const containerRef = useRef<HTMLDivElement>(null);
     const products = use(productsPromise);
 
@@ -153,7 +154,7 @@ export default function ProductsTableBody({
                             </div>
 
                             <div className="text-muted-foreground">
-                                {getWeightString(product.grams)}
+                                {getWeightString(product)}
                             </div>
 
                             <div className="font-medium">

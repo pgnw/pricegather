@@ -30,12 +30,13 @@ import ProductsTableBody from "@/ui/ProductsTableBody";
 import ProductsTableLoadedCount from "@/ui/ProductsTableLoadedCount";
 import ProductsTableLoadedCountLoading from "@/ui/ProductsTableLoadingCountLoading";
 import ProductsTableBodyLoading from "@/ui/ProductsTableBodyLoading";
+import {ProductWithMeasurement} from "@/lib/data/products";
 
 
 export default function ProductDisplay({
                                            productsPromise
                                        }: {
-    productsPromise: Promise<Product[]>
+    productsPromise: Promise<ProductWithMeasurement[]>
 }) {
     const [searchOptions, setSearchOptions] =
         useState<SearchOptions>({

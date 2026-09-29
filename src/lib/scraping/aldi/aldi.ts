@@ -36,7 +36,7 @@ export async function scrapeAldi() {
         offset += pageSize;
 
         const returnedProducts = res.data.map(apiProduct => {
-            return transformAldiAPIProduct(apiProduct, aldiStoreId);
+            return  transformAldiAPIProduct(apiProduct, aldiStoreId);
         });
         products.push(...returnedProducts);
     }

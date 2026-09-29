@@ -1,4 +1,5 @@
-import {Product} from "@/generated/prisma/client";
+import {Prisma, Product} from "@/generated/prisma/client";
+import {ProductWithMeasurement} from "@/lib/data/products";
 
 export const OramaProductSchema = {
     productId: "string",
@@ -8,6 +9,7 @@ export const OramaProductSchema = {
     grams: "number",
     priceWeightRatio: "number",
     url: "string",
+    measurementType: "string",
 } as const;
 
 export type OramaProduct = {
@@ -18,9 +20,10 @@ export type OramaProduct = {
     grams: number;
     priceWeightRatio: number;
     url: string;
+    measurementType: string;
 };
 
-export function ProductPrismaToOrama(product: Product): OramaProduct {
+export function ProductPrismaToOrama(product: ProductWithMeasurement): OramaProduct {
     return {
         productId: product.id,
         name: product.name,
@@ -29,6 +32,7 @@ export function ProductPrismaToOrama(product: Product): OramaProduct {
         grams: product.grams || 0,
         priceWeightRatio: product.grams != undefined ? Math.round((product.price / product.grams) * 1000) / 1000 : 0,
         url: product.url,
+        measurementType: product?.measurementType?.measurementType ?? '',
     };
 }
 
@@ -54,11 +58,17 @@ export function compareNullableNumber(
         : b - a;
 }
 
-export function getWeightString(weight: number) {
-    if (weight >= 1000)
-        return `${weight / 1000} kg`;
-    else if (weight > 0)
-        return `${weight} g`;
-    else
-        return '-';
+export function getWeightString(product: OramaProduct): string {
+    if (product.measurementType === "weight") {
+        if (product.grams >= 1000)
+            return `${product.grams / 1000} kg`;
+        else if (product.grams > 0)
+            return `${product.grams} g`;
+    } else if (product.measurementType === "volume") {
+        if (product.grams >= 1000)
+            return `${product.grams / 1000} L`;
+        else if (product.grams > 0)
+            return `${product.grams} ml`;
+    }
+    return '-';
 }

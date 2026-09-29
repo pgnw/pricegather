@@ -1,7 +1,10 @@
 import {prisma} from "@/lib/prisma";
-import {Product} from "@/generated/prisma/client";
+import {Prisma, Product} from "@/generated/prisma/client";
 import {store} from "next/dist/build/output/store";
 import {SortOrder} from "@/generated/prisma/internal/prismaNamespace";
+
+const productWithMeasurement = {include: { measurementType: true}} satisfies Prisma.ProductDefaultArgs;
+export type ProductWithMeasurement = Prisma.ProductGetPayload<typeof productWithMeasurement>;
 
 export async function getProducts(productName?: string, limit?: number, offset?: number, orderBy?: SortOrder): Promise<Product[]> {
     const productsPromise = prisma.product.findMany({
@@ -16,6 +19,26 @@ export async function getProducts(productName?: string, limit?: number, offset?:
         },
         take: limit,
         skip: offset
+    });
+
+    return productsPromise;
+}
+export async function getProductsWithMeasurementUnits(productName?: string, limit?: number, offset?: number, orderBy?: SortOrder): Promise<ProductWithMeasurement[]> {
+    const productsPromise = prisma.product.findMany({
+        where: {
+            name: {
+                contains: productName,
+                mode: 'insensitive'
+            }
+        },
+        orderBy: {
+            name: orderBy ?? "asc"
+        },
+        take: limit,
+        skip: offset,
+        include: {
+            measurementType: true
+        }
     });
 
     return productsPromise;
@@ -47,6 +70,6 @@ export async function populateStore(storeId: number, products: Product[]) {
                 storeId: storeId
             }
         }),
-        prisma.product.createMany({data: products})
+        prisma.product.createMany({data: products}),
     ]);
 }
