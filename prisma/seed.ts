@@ -21,6 +21,22 @@ async function main() {
                 name: 'Aldi'
             }
     })
+
+    const weight = await prisma.measurementType.upsert({
+        where: { measurementType: 'weight' },
+        update: {},
+        create: {
+            measurementType: 'weight'
+        }
+    });
+    const volume = await prisma.measurementType.upsert({
+        where: { measurementType: 'volume' },
+        update: {},
+        create: {
+            measurementType: 'volume'
+        }
+    });
+
 }
 
 // async function createProducts() {
