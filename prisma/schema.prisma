@@ -14,14 +14,22 @@ model User {
 }
 
 model Product {
-  id          String  @id
-  store       Store   @relation(fields: [storeId], references: [id])
-  storeId     Int
-  name        String
-  description String?
-  grams       Int?
-  price       Float // TODO replace this with a seperate table to track price changes over time.
-  url         String
+  id                String           @id
+  store             Store            @relation(fields: [storeId], references: [id])
+  storeId           Int
+  name              String
+  description       String?
+  grams             Int?
+  price             Float // TODO replace this with a seperate table to track price changes over time.
+  url               String
+  measurementType   measurementType? @relation(fields: [measurementTypeId], references: [id])
+  measurementTypeId Int?
+}
+
+model measurementType {
+  id              Int       @id @default(autoincrement())
+  measurementType String
+  products        Product[]
 }
 
 model Store {
