@@ -4,11 +4,22 @@ import {prisma} from "@/lib/prisma";
 
 export function transformAldiAPIProduct(apiProduct: AldiAPIProduct, storeId: number): Product {
     let grams = null;
+    let measurementType = null;
     if (apiProduct.sellingSize != null) {
         const regex = new RegExp("([0-9\.]*)\\s*(\\S.*)");
         const result = regex.exec(apiProduct.sellingSize);
         if (result != null) {
             const [, weightNumberStr, weightSymbol] = result;
+
+            if (weightSymbol == "g" || "kg") {
+                measurementType = prisma.measurementType.findUnique({
+                    where: {measurementType: 'weight'}
+                });
+            } else if (weightSymbol == 'ml' || 'L') {
+                measurementType = prisma.measurementType.findUnique({
+                    where: {measurementType: 'volume'}
+                });
+            }
 
             if (weightSymbol == "g" || weightSymbol == "ml") {
                 grams = Number(weightNumberStr);
@@ -25,6 +36,7 @@ export function transformAldiAPIProduct(apiProduct: AldiAPIProduct, storeId: num
         grams: grams,
         price: apiProduct.price.amountRelevant,
         url: 'https://www.aldi.com.au/product/' + apiProduct.sku,
+        measurementTypeId: measurementType,
     } as Product;
 
     return product;
