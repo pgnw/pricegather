@@ -53,3 +53,12 @@ export function compareNullableNumber(
         ? a - b
         : b - a;
 }
+
+export function getWeightString(weight: number) {
+    if (weight >= 1000)
+        return `${weight / 1000} kg`;
+    else if (weight > 0)
+        return `${weight} g`;
+    else
+        return '-';
+}

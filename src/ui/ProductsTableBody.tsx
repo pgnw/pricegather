@@ -3,7 +3,7 @@ import {Product} from "@/generated/prisma/client";
 import React, {use, useLayoutEffect, useMemo, useRef} from "react";
 import {create, insert, search} from "@orama/orama";
 import {
-    compareNullableNumber,
+    compareNullableNumber, getWeightString,
     OramaProductSchema,
     ProductPrismaToOrama,
     SearchOptions
@@ -59,7 +59,7 @@ export default function ProductsTableBody({
     const resultAsync = search(db, {
         term: searchOptions.searchTerm ?? "",
         limit: 10000,
-        threshold:0,
+        threshold: 0,
 
         sortBy: (a, b) => {
 
@@ -153,9 +153,7 @@ export default function ProductsTableBody({
                             </div>
 
                             <div className="text-muted-foreground">
-                                {product.grams > 0
-                                    ? `${product.grams}g`
-                                    : "—"}
+                                {getWeightString(product.grams)}
                             </div>
 
                             <div className="font-medium">
