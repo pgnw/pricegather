@@ -1,6 +1,7 @@
 import {expect, test} from "vitest";
 import {ProductPrismaToOrama} from "@/lib/Orama";
 import {Product} from "@/generated/prisma/client";
+import {ProductWithMeasurement} from "@/lib/data/products";
 
 test("Convert Product to OramaProduct: base test", () => {
     const mockProduct = {
@@ -10,7 +11,12 @@ test("Convert Product to OramaProduct: base test", () => {
         name: "Blueberry",
         description: "It's blue",
         storeId: 5,
-    } as Product;
+        measurementTypeId: 1,
+        measurementType: {
+            id: 1,
+            measurementType: "weight",
+        },
+    } as ProductWithMeasurement;
 
     const returnedOramaProduct = ProductPrismaToOrama(mockProduct);
 
@@ -27,7 +33,12 @@ test("Convert Product to OramaProduct: handle null values", () => {
         price: 5,
         name: "Blueberry",
         storeId: 5,
-    } as Product;
+        measurementTypeId: 1,
+        measurementType: {
+            id: 2,
+            measurementType: "volume",
+        },
+    } as ProductWithMeasurement;
 
     const returnedOramaProduct = ProductPrismaToOrama(mockProduct);
 
