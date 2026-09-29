@@ -1,5 +1,12 @@
 import {expect, test, vi} from "vitest";
-import {createProduct, createProducts, deleteProductsFromStore, getProducts, populateStore} from "@/lib/data/products";
+import {
+    createProduct,
+    createProducts,
+    deleteProductsFromStore,
+    getProducts,
+    populateStore,
+    ProductWithMeasurement
+} from "@/lib/data/products";
 import {prisma} from "@/lib/__mocks__/prisma";
 
 vi.mock("@/lib/prisma");
@@ -12,7 +19,12 @@ test("make product", async () => {
         name: "food",
         description: "desc",
         storeId: 2,
-        url: '0229'
+        url: '0229',
+        measurementTypeId: 1,
+        measurementType: {
+            id: 2,
+            measurementType: "volume",
+        },
     };
 
     prisma.product.create.mockResolvedValueOnce(newProduct);
@@ -32,7 +44,12 @@ test("Get Products", async () => {
             name: "green apple",
             description: "fruit",
             storeId: 2,
-            url: 'green_apple'
+            url: 'green_apple',
+            measurementTypeId: 1,
+            measurementType: {
+                id: 1,
+                measurementType: "weight",
+            },
         },
         {
             id: "2",
@@ -41,7 +58,12 @@ test("Get Products", async () => {
             name: "red apple",
             description: "desc",
             storeId: 2,
-            url: 'red_apple'
+            url: 'red_apple',
+            measurementTypeId: 1,
+            measurementType: {
+                id: 1,
+                measurementType: "weight",
+            },
         }
     ];
 
@@ -96,7 +118,11 @@ test("Populates Store", async () => {
             description: "",
             grams: 1000,
             price: 3.99,
-            url: 'milk_'
+            url: 'milk_',      measurementTypeId: 1,
+            measurementType: {
+                id: 1,
+                measurementType: "weight",
+            },
         },
     ];
 
@@ -133,6 +159,11 @@ test("Create Products", async () => {
             description: "fruit",
             storeId: 2,
             url: 'green_apple',
+            measurementTypeId: 1,
+            measurementType: {
+                id: 1,
+                measurementType: "weight",
+            },
         },
         {
             id: "2",
@@ -142,6 +173,11 @@ test("Create Products", async () => {
             description: "desc",
             storeId: 2,
             url: 'red_apple',
+            measurementTypeId: 1,
+            measurementType: {
+                id: 1,
+                measurementType: "weight",
+            },
         }
     ];
 
