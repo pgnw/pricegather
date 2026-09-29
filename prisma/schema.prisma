@@ -28,7 +28,7 @@ model Product {
 
 model measurementType {
   id              Int       @id @default(autoincrement())
-  measurementType String
+  measurementType String    @unique
   products        Product[]
 }
 
