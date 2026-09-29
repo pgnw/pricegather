@@ -1,6 +1,6 @@
 import {useWindowVirtualizer} from "@tanstack/react-virtual";
 import {Product} from "@/generated/prisma/client";
-import React, {use, useMemo} from "react";
+import React, {use, useLayoutEffect, useMemo, useRef} from "react";
 import {create, insert, search} from "@orama/orama";
 import {
     compareNullableNumber,
@@ -27,6 +27,8 @@ export default function ProductsTableBody({
     productsPromise: Promise<Product[]>,
     onCountChange: React.Dispatch<React.SetStateAction<number>>,
 }) {
+    'use no memo';
+    const containerRef = useRef<HTMLDivElement>(null);
     const products = use(productsPromise);
 
     const db = useMemo(() => {
@@ -57,6 +59,7 @@ export default function ProductsTableBody({
     const resultAsync = search(db, {
         term: searchOptions.searchTerm ?? "",
         limit: 10000,
+        threshold:0,
 
         sortBy: (a, b) => {
 
@@ -93,75 +96,80 @@ export default function ProductsTableBody({
 
     const displayProducts =
         result.hits.map(hit => hit.document);
-    // TODO FIX
+
     //onCountChange(result.hits.length);
 
     const rowVirtualizer =
         useWindowVirtualizer({
             count: displayProducts.length,
             estimateSize: () => 32,
-            overscan: 50
+            overscan: 50,
+            getItemKey: (index) => displayProducts[index].productId,
         });
 
-    return (<div
-        className="relative w-full border-x border-b"
-        style={{
-            height:
-                `${rowVirtualizer.getTotalSize()}px`
-        }}
-    >
-        {rowVirtualizer
-            .getVirtualItems()
-            .map((virtualRow) => {
 
-                const product =
-                    displayProducts[
-                        virtualRow.index
-                        ];
+    return (<>
+        <div
+            className="relative w-full border-x border-b"
+            ref={containerRef}
+            style={{
+                height:
+                    `${rowVirtualizer.getTotalSize()}px`
+            }}
+        >
+            {rowVirtualizer
+                .getVirtualItems()
+                .map((virtualRow) => {
 
-                return (
-                    <div
-                        key={product.productId}
-                        ref={rowVirtualizer.measureElement}
-                        data-index={virtualRow.index}
-                        className={cn(
-                            "absolute left-0 top-0 grid w-full",
-                            "grid-cols-[minmax(300px,1fr)_120px_120px_120px]",
-                            "items-center gap-4 border-b bg-background",
-                            "px-4 py-3 text-sm hover:bg-muted/30"
-                        )}
-                        style={{
-                            transform: `translateY(${virtualRow.start}px)`
-                        }}
-                    >
-                        <div className="min-w-0">
-                            <a
-                                href={product.url}
-                                target="_blank"
-                                rel="noreferrer"
-                                className="truncate font-medium hover:underline "
-                            >
-                                {product.name}
-                            </a>
+                    const product =
+                        displayProducts[
+                            virtualRow.index
+                            ];
+
+                    return (
+                        <div
+                            key={product.productId}
+                            ref={rowVirtualizer.measureElement}
+                            data-index={virtualRow.index}
+                            className={cn(
+                                "absolute left-0 top-0 grid w-full",
+                                "grid-cols-[minmax(300px,1fr)_120px_120px_120px]",
+                                "items-center gap-4 border-b bg-background",
+                                "px-4 py-3 text-sm hover:bg-muted/30"
+                            )}
+                            style={{
+                                transform: `translateY(${virtualRow.start}px)`
+                            }}
+                        >
+                            <div className="min-w-0">
+                                <a
+                                    href={product.url}
+                                    target="_blank"
+                                    rel="noreferrer"
+                                    className="truncate font-medium hover:underline "
+                                >
+                                    {product.name}
+                                </a>
+                            </div>
+
+                            <div className="text-muted-foreground">
+                                {product.grams > 0
+                                    ? `${product.grams}g`
+                                    : "—"}
+                            </div>
+
+                            <div className="font-medium">
+                                ${(product.price / 100).toFixed(2)}
+                            </div>
+
+                            <div className="text-muted-foreground">
+                                {product.priceWeightRatio > 0
+                                    ? `$${product.priceWeightRatio.toFixed(2)}`
+                                    : "—"}
+                            </div>
                         </div>
-
-                        <div className="text-muted-foreground">
-                            {product.grams > 0
-                                ? `${product.grams}g`
-                                : "—"}
-                        </div>
-
-                        <div className="font-medium">
-                            ${(product.price / 100).toFixed(2)}
-                        </div>
-
-                        <div className="text-muted-foreground">
-                            {product.priceWeightRatio > 0
-                                ? `$${product.priceWeightRatio.toFixed(2)}`
-                                : "—"}
-                        </div>
-                    </div>
-                );
-            })}
-    </div>)
+                    );
+                })}
+        </div>
+    </>)
 }
