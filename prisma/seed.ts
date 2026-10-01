@@ -22,6 +22,15 @@ async function main() {
             }
     })
 
+    const woolworths  =  await prisma.store.upsert({
+        where: {name: "Woolworths"},
+        update: {},
+        create:
+            {
+                name: 'Woolworths'
+            }
+    })
+
     const weight = await prisma.measurementType.upsert({
         where: { measurementType: 'weight' },
         update: {},
