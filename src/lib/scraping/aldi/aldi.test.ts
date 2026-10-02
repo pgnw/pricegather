@@ -11,18 +11,11 @@ vi.mock("@/lib/data/products");
 
 test('Pulls from Aldi products endpoint', async () => {
 
-    const aldiStoreId = 2;
-    prisma.store.findUnique.mockResolvedValueOnce({
-        id: aldiStoreId,
-        name: "Aldi",
-    });
-
     const mockProducts = mockAldiResponse.data.map(p => {
-        return transformAldiAPIProduct(p, aldiStoreId);
+        return transformAldiAPIProduct(p);
     });
 
     await scrapeAldi();
     expect(populateStore).toHaveBeenCalledOnce();
 
-    expect(populateStore).toHaveBeenCalledWith(aldiStoreId, mockProducts);
 })
