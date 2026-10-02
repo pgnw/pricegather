@@ -15,5 +15,6 @@ export type AldiAPIProduct = {
     sellingSize: string | null;
     price: {
         amountRelevant: number;
+        comparison: number;
     };
 };
