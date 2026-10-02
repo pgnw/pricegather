@@ -32,6 +32,7 @@ export const mockAldiResponse = {
                 "sellingSize": "45 g",
                 "price": {
                     "amountRelevant": 99,
+                    "comparison": 99
                 },
             },
             {
@@ -40,6 +41,7 @@ export const mockAldiResponse = {
                 "sellingSize": "500 ml",
                 "price": {
                     "amountRelevant": 799,
+                    "comparison": 799
                 }
             }
         ]

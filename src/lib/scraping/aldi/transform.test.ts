@@ -19,13 +19,14 @@ test("Transform Aldi product", async () => {
         "name": name,
         "sellingSize": sellingSize,
         "price": {
-            "amountRelevant": price
+            "amountRelevant": price,
+            "comparison": price
         },
     };
 
     const storeId = 2;
 
-    const returnedProduct = transformAldiAPIProduct(mockAPIProduct, storeId);
+    const returnedProduct = transformAldiAPIProduct(mockAPIProduct);
 
     const expectedReturnedProduct = {
         id: id,
@@ -50,13 +51,14 @@ test("Transform Aldi product with missing weight value", async () => {
         "name": name,
         "sellingSize": sellingSize,
         "price": {
-            "amountRelevant": price
+            "amountRelevant": price,
+            "comparison": price
         },
     };
 
     const storeId = 2;
 
-    const returnedProduct = transformAldiAPIProduct(mockAPIProduct, storeId);
+    const returnedProduct = transformAldiAPIProduct(mockAPIProduct);
 
     const expectedReturnedProduct = {
         id: id,
