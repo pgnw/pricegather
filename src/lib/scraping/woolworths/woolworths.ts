@@ -27,10 +27,9 @@ export async function scrapeWoolworths() {
 
         for (const bundle of productsResponse.Bundles) {
             for (const apiProduct of bundle.Products) {
-
                 const product = transformWhoolworthsAPIProduct(apiProduct);
-                console.log(product);
                 totalProducts.set(product.id, product);
+
             }
         }
         // Only send requests once every x milliseconds to avoid getting banned.
@@ -47,7 +46,7 @@ async function getCategories(): Promise<Category[]> {
     let categories = await kyFetchWithCookies.get<ApiCategories>(apiURL).json();
 
     // Only return non restricted categories, also ignore third party sellers
-    return categories.Categories.filter(c => !c.IsRestricted && c.Description != 'Everyday Market');
+    return categories.Categories.filter(c => !c.IsRestricted && c.Description != 'Everyday Market' && c.Description != 'HealthyLife');
 }
 
 async function getProductsFromCategory(category: Category) {
