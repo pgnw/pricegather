@@ -1,16 +1,9 @@
 import {AldiAPIProduct} from "@/lib/scraping/aldi/types";
 import {Prisma, Product} from "@/generated/prisma/client";
 import {prisma} from "@/lib/prisma";
+import {aldiStoreId, volumeMeasurementType, weightMeasurementType} from "@/lib/data/staticData";
 
-const volumeMeasurementType = await prisma.measurementType.findUnique({
-    where: {measurementType: 'volume'}
-})!;
-const weightMeasurementType = await prisma.measurementType.findUnique({
-    where: {measurementType: 'weight'}
-})!;
-
-
-export function transformAldiAPIProduct(apiProduct: AldiAPIProduct, storeId: number): Product {
+export function transformAldiAPIProduct(apiProduct: AldiAPIProduct): Product {
     let grams = null;
     let measurementTypeId = null;
     if (apiProduct.sellingSize != null) {
@@ -35,7 +28,7 @@ export function transformAldiAPIProduct(apiProduct: AldiAPIProduct, storeId: num
 
     const product = {
         id: apiProduct.sku,
-        storeId: storeId,
+        storeId: aldiStoreId,
         name: apiProduct.name,
         grams: grams,
         price: apiProduct.price.amountRelevant,
