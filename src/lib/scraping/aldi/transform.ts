@@ -27,7 +27,7 @@ export function transformAldiAPIProduct(apiProduct: AldiAPIProduct): Product {
     }
 
     const product = {
-        id: apiProduct.sku,
+        id: 'a_' + apiProduct.sku,
         storeId: aldiStoreId,
         name: apiProduct.name,
         grams: grams,
