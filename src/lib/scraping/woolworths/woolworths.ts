@@ -9,6 +9,7 @@ import {transformWhoolworthsAPIProduct} from "@/lib/scraping/woolworths/transfor
 import {Product} from "@/generated/prisma/client";
 import {chromium} from "patchright";
 import makeFetchCookie from 'fetch-cookie'
+
 export async function scrapeWoolworths() {
     const categories = await getCategories();
 
@@ -27,6 +28,13 @@ export async function scrapeWoolworths() {
 
         for (const bundle of productsResponse.Bundles) {
             for (const apiProduct of bundle.Products) {
+                const sourceCategories = apiProduct.AdditionalAttributes.piesdepartmentnamesjson;
+
+                // Skip products which come from third party sellers
+                if (sourceCategories.includes('Everyday') || sourceCategories.includes('Healthylife') ) {
+                    continue;
+                }
+
                 const product = transformWhoolworthsAPIProduct(apiProduct);
                 totalProducts.set(product.id, product);
 
@@ -114,5 +122,8 @@ export type WhoolworthsApiProduct = {
     Name: string,
     UrlFriendlyName: string,
     PackageSize: string,
-    Vendor: string
+    Vendor: string,
+    AdditionalAttributes: {
+        piesdepartmentnamesjson: string,
+    }
 };
