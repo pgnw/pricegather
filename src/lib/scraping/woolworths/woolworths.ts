@@ -36,13 +36,9 @@ export async function scrapeWoolworths() {
 
         for (const bundle of productsResponse.Bundles) {
             for (const apiProduct of bundle.Products) {
-                if (apiProduct.Vendor === 'Ausway') // Filters out third party items
-                {
-                    continue;
-                }
+
                 const product = transformWhoolworthsAPIProduct(apiProduct);
                 totalProducts.set(product.id, product);
-
             }
         }
         // Only send requests once every x milliseconds to avoid getting banned.
@@ -88,10 +84,10 @@ async function getCategories(): Promise<Category[]> {
     const fetchObj = {
         headers: getHeaders(),
     }
-    const categories = await ky.get<ApiCategories>(apiURL, fetchObj).json();
+    let categories = await ky.get<ApiCategories>(apiURL, fetchObj).json();
 
-    // Only return non restricted categories
-    return categories.Categories.filter(c => !c.IsRestricted);
+    // Only return non restricted categories, also ignore third party sellers
+    return  categories.Categories.filter(c => !c.IsRestricted && c.Description != 'Everyday Market');
 }
 
 async function getProductsFromCategory(category: Category) {
