@@ -7,16 +7,11 @@ import PrismaPromise = Prisma.PrismaPromise;
 import {BatchPayload} from "@/generated/prisma/internal/prismaNamespace";
 import {Prisma} from "@/generated/prisma/client";
 import {populateStore} from "@/lib/data/products";
+import {aldiStoreId} from "@/lib/data/staticData";
 
 const pageSize = 60;
 
 export async function scrapeAldi() {
-    const aldiStoreId = (await prisma.store.findUnique({
-        where: {
-            name: "Aldi"
-        }
-    }))?.id;
-    assert.ok(aldiStoreId);
 
     let res = await getAldiProducts(0);
 
