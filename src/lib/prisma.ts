@@ -13,7 +13,7 @@ export const prisma =
     globalForPrisma.prisma ??
     new PrismaClient({
         adapter,
-        log: ["query", "info", "warn", "error"],
+        // log: ["query", "info", "warn", "error"],
     });
 
 // // @ts-ignore
