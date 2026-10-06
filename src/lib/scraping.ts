@@ -4,5 +4,5 @@ import {scrapeWoolworths} from "@/lib/scraping/woolworths/woolworths";
 
 export async function scrape() {
     await scrapeWoolworths();
-    await scrapeAldi();
+    //await scrapeAldi();
 }

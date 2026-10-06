@@ -1,6 +1,6 @@
 import {prisma} from "@/lib/prisma";
 import assert from "node:assert";
-import {populateStore} from "@/lib/data/products";
+import {getProducts, populateStore} from "@/lib/data/products";
 import ky from "ky";
 import {AldiAPIResponse} from "@/lib/scraping/aldi/types";
 import {Agent} from "node:http";
@@ -10,38 +10,47 @@ import {Product} from "@/generated/prisma/client";
 import {chromium} from "patchright";
 import makeFetchCookie from 'fetch-cookie'
 
+const pageSize = 36;
+
 export async function scrapeWoolworths() {
     const categories = await getCategories();
 
     // Woolworths categories have some duplicate products
     const totalProducts = new Map<string, Product>();
 
-    const millisecondsBetweenRequests = 1000;
-    const miniumWaitTime = () => new Promise(resolve => setTimeout(resolve, millisecondsBetweenRequests));
 
     for (const category of categories) {
-        const delay = miniumWaitTime();
-        const productsResponse = await getProductsFromCategory(category);
+        let isDoneWithCategory = false;
 
-        if (productsResponse.Bundles == null)
-            continue;
+        let page = 1;
 
-        for (const bundle of productsResponse.Bundles) {
-            for (const apiProduct of bundle.Products) {
-                const sourceCategories = apiProduct.AdditionalAttributes.piesdepartmentnamesjson;
+        while (!isDoneWithCategory) {
 
-                // Skip products which come from third party sellers
-                if (sourceCategories.includes('Everyday') || sourceCategories.includes('Healthylife') ) {
-                    continue;
+            let productsResponse = await getProductsFromCategory(category, page);
+
+            if (productsResponse.Bundles) {
+                for (const bundle of productsResponse.Bundles) {
+                    for (const apiProduct of bundle.Products) {
+                        const sourceCategories = apiProduct.AdditionalAttributes.piesdepartmentnamesjson;
+
+                        // Skip products which come from third party sellers
+                        if (sourceCategories.includes('Everyday') || sourceCategories.includes('Healthylife')) {
+                            isDoneWithCategory = true;
+                            continue;
+                        }
+
+                        const product = transformWhoolworthsAPIProduct(apiProduct);
+                        totalProducts.set(product.id, product);
+                    }
                 }
-
-                const product = transformWhoolworthsAPIProduct(apiProduct);
-                totalProducts.set(product.id, product);
-
             }
+            if (page >= productsResponse.TotalRecordCount / pageSize)
+            {
+                isDoneWithCategory = true;
+            }
+
+            page += 1;
         }
-        // Only send requests once every x milliseconds to avoid getting banned.
-        await delay;
     }
 
     await populateStore(woolworthsStoreId, totalProducts.values().toArray());
@@ -57,12 +66,12 @@ async function getCategories(): Promise<Category[]> {
     return categories.Categories.filter(c => !c.IsRestricted && c.Description != 'Everyday Market' && c.Description != 'HealthyLife');
 }
 
-async function getProductsFromCategory(category: Category) {
+async function getProductsFromCategory(category: Category, pageNumber: number) {
     const formatObject = `{\"name\":\"${category.Description}\"}`;
     const body = {
         categoryId: category.NodeId,
-        pageNumber: 1,
-        pageSize: 36,
+        pageNumber: pageNumber,
+        pageSize: pageSize,
         url: 'a', // Seems to accept anything?
         formatObject: formatObject,
     };
@@ -109,11 +118,12 @@ type Category = {
 }
 
 type ApiProductsFromCategory = {
-    Bundles: [ApiBundle],
+    Bundles: ApiBundle[],
+    TotalRecordCount: number,
 }
 
 type ApiBundle = {
-    Products: [WhoolworthsApiProduct]
+    Products: WhoolworthsApiProduct[],
 }
 
 export type WhoolworthsApiProduct = {
