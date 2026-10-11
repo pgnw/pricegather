@@ -56,14 +56,12 @@ export default function ProductsTableBody({
     const sortDirection =
         searchOptions.sortDirection ?? "ASC";
 
-
     const resultAsync = search(db, {
         term: searchOptions.searchTerm ?? "",
         limit: 10000,
         threshold: 0,
 
         sortBy: (a, b) => {
-
             const productA = a[2];
             const productB = b[2];
 
@@ -90,6 +88,12 @@ export default function ProductsTableBody({
                     sortDirection
                 );
             }
+        },
+        where: {
+            price: {
+                lte: searchOptions.maxPrice,
+
+            }
         }
     });
 
@@ -97,6 +101,7 @@ export default function ProductsTableBody({
 
     const displayProducts =
         result.hits.map(hit => hit.document);
+
 
     //onCountChange(result.hits.length);
 

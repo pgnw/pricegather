@@ -31,7 +31,7 @@ import ProductsTableLoadedCount from "@/ui/ProductsTableLoadedCount";
 import ProductsTableLoadedCountLoading from "@/ui/ProductsTableLoadingCountLoading";
 import ProductsTableBodyLoading from "@/ui/ProductsTableBodyLoading";
 import {ProductWithMeasurement} from "@/lib/data/products";
-
+import {Slider} from "@/components/ui/slider";
 
 export default function ProductDisplay({
                                            productsPromise
@@ -42,7 +42,11 @@ export default function ProductDisplay({
         useState<SearchOptions>({
             searchTerm: "",
             sortBy: "name",
-            sortDirection: "ASC"
+            sortDirection: "ASC",
+            minPrice: 0,
+            maxPrice: 99999,
+            minWeight: 0,
+            maxWeight: 999999,
         });
     const [returnedProductsCount, setReturnedProductsCount] = useState(0);
 
@@ -152,7 +156,35 @@ export default function ProductDisplay({
 
                 </div>
             </section>
+            <div className="mt-5 grid gap-5 sm:grid-cols-2">
 
+                <fieldset>
+                    <legend className="mb-2 text-xs font-medium text-muted-foreground">
+                        Price
+                    </legend>
+
+                    <div className="mb-2 flex justify-between text-sm">
+                        <span>$0</span>
+                        <span>$20</span>
+                    </div>
+
+                    <Slider
+                        defaultValue={[0, 2000]}
+                        min={0}
+                        max={2000}
+                        step={50}
+                        onValueChange={(value) => {
+                            const [minValue, maxValue] =(value as number[]);
+                            setSearchOptions(prev => ({
+                                ...prev,
+                                minPrice: minValue,
+                                maxPrice: maxValue,
+                            }));
+                            console.log(value);
+                        }}
+                    />
+                </fieldset>
+            </div>
 
             <section className="mt-8">
                 <h2 className="text-xl font-semibold tracking-tight mb-1 ">

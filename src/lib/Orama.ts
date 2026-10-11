@@ -40,7 +40,17 @@ export type SearchOptions = {
     searchTerm?: string;
     sortBy?: "price" | "grams" | "priceWeightRatio" | 'name';
     sortDirection?: "ASC" | "DESC";
+    minPrice?: number;
+    maxPrice?: number;
+    minWeight?: number;
+    maxWeight?: number;
 }
+
+export type SearchFilter = {
+    field: "grams" | "price" | "priceWeightRatio";
+    operator: ">" | ">=" | "<" | "<=" | "=";
+    value: number;
+};
 
 export function compareNullableNumber(
     a: number,
