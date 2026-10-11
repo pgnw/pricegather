@@ -24,8 +24,8 @@ export async function scrapeWoolworths() {
 
         let page = 1;
 
-        while (!isDoneWithCategory) {
 
+        while (!isDoneWithCategory) {
             let productsResponse = await getProductsFromCategory(category, page);
 
             if (productsResponse.Bundles) {
