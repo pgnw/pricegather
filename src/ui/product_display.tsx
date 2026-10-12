@@ -204,7 +204,7 @@ export default function ProductDisplay({
                 {/*    <ProductsTableLoadedCount count={returnedProductsCount}/>*/}
                 {/*</Suspense>*/}
 
-                <ProductsTableHeader/>
+                <ProductsTableHeader searchOptions={searchOptions} setSearchOptions={setSearchOptions} />
 
                 <Suspense fallback={<ProductsTableBodyLoading/>}>
                     <ProductsTableBody productsPromise={productsPromise} searchOptions={searchOptions}
