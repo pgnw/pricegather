@@ -91,7 +91,7 @@ export default function ProductsTableBody({
         },
         where: {
             price: {
-                lte: searchOptions.maxPrice,
+                lte: searchOptions.maxPrice == undefined ? 9999 : searchOptions.maxPrice * 100
 
             }
         }
@@ -112,6 +112,7 @@ export default function ProductsTableBody({
             overscan: 50,
             getItemKey: (index) => displayProducts[index].productId,
         });
+    rowVirtualizer.shouldAdjustScrollPositionOnItemSizeChange  = () => false;
 
 
     return (<>
