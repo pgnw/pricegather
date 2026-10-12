@@ -43,10 +43,10 @@ export default function ProductDisplay({
             searchTerm: "",
             sortBy: "name",
             sortDirection: "ASC",
-            minPrice: 0,
-            maxPrice: 99999,
-            minWeight: 0,
-            maxWeight: 999999,
+            minPrice: undefined,
+            maxPrice: undefined,
+            minWeight: undefined,
+            maxWeight: undefined,
         });
     const [returnedProductsCount, setReturnedProductsCount] = useState(0);
 
@@ -87,7 +87,7 @@ export default function ProductDisplay({
                 <div className="flex flex-col gap-5 sm:flex-row">
 
                     <fieldset>
-                        <legend className="mb-2 text-xs font-medium text-muted-foreground">
+                        <legend className="mb-2 ml-0.5 text-xs font-medium text-muted-foreground">
                             Sort by
                         </legend>
 
@@ -126,7 +126,7 @@ export default function ProductDisplay({
 
 
                     <fieldset>
-                        <legend className="mb-2 text-xs font-medium text-muted-foreground">
+                        <legend className="ml-0.5 mb-2 text-xs font-medium text-muted-foreground">
                             Direction
                         </legend>
 
@@ -154,37 +154,46 @@ export default function ProductDisplay({
                         </ToggleGroup>
                     </fieldset>
 
+
+                    <fieldset>
+                        <legend className="ml-1 mb-2 text-xs font-medium text-muted-foreground">
+                            Price
+                        </legend>
+
+                        <div className="flex gap-3">
+                            <Input
+                                type="number"
+                                placeholder="Min"
+                                value={searchOptions.minPrice ?? ""}
+                                onChange={(e) =>
+                                    setSearchOptions(prev => ({
+                                        ...prev,
+                                        minPrice:
+                                            e.target.value === ""
+                                                ? undefined
+                                                : Number(e.target.value),
+                                    }))
+                                }
+                            />
+
+                            <Input
+                                type="number"
+                                placeholder="Max"
+                                value={searchOptions.maxPrice ?? ""}
+                                onChange={(e) =>
+                                    setSearchOptions(prev => ({
+                                        ...prev,
+                                        maxPrice:
+                                            e.target.value === ""
+                                                ? undefined
+                                                : Number(e.target.value),
+                                    }))
+                                }
+                            />
+                        </div>
+                    </fieldset>
                 </div>
             </section>
-            <div className="mt-5 grid gap-5 sm:grid-cols-2">
-
-                <fieldset>
-                    <legend className="mb-2 text-xs font-medium text-muted-foreground">
-                        Price
-                    </legend>
-
-                    <div className="mb-2 flex justify-between text-sm">
-                        <span>$0</span>
-                        <span>$20</span>
-                    </div>
-
-                    <Slider
-                        defaultValue={[0, 2000]}
-                        min={0}
-                        max={2000}
-                        step={50}
-                        onValueChange={(value) => {
-                            const [minValue, maxValue] =(value as number[]);
-                            setSearchOptions(prev => ({
-                                ...prev,
-                                minPrice: minValue,
-                                maxPrice: maxValue,
-                            }));
-                            console.log(value);
-                        }}
-                    />
-                </fieldset>
-            </div>
 
             <section className="mt-8">
                 <h2 className="text-xl font-semibold tracking-tight mb-1 ">

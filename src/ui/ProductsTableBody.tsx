@@ -89,21 +89,18 @@ export default function ProductsTableBody({
                 );
             }
         },
-        where: {
-            price: {
-                lte: searchOptions.maxPrice == undefined ? 9999 : searchOptions.maxPrice * 100
-
-            }
-        }
     });
 
     const result = resultAsync as Exclude<typeof resultAsync, Promise<unknown>>;
 
-    const displayProducts =
+    let displayProducts =
         result.hits.map(hit => hit.document);
 
+    displayProducts = displayProducts.filter(product => {
+        return !(product.price > (searchOptions.maxPrice ?? 1000000) * 100 || product.price < (searchOptions.minPrice  ?? Number.MIN_VALUE) * 100 ||
+            product.grams > (searchOptions.maxWeight ?? 100000) * 100 || product.grams < (searchOptions.minWeight ?? Number.MIN_VALUE) * 100);
+    })
 
-    //onCountChange(result.hits.length);
 
     const rowVirtualizer =
         useWindowVirtualizer({
@@ -112,7 +109,7 @@ export default function ProductsTableBody({
             overscan: 50,
             getItemKey: (index) => displayProducts[index].productId,
         });
-    rowVirtualizer.shouldAdjustScrollPositionOnItemSizeChange  = () => false;
+    rowVirtualizer.shouldAdjustScrollPositionOnItemSizeChange = () => false;
 
 
     return (<>
