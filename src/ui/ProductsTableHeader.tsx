@@ -25,7 +25,7 @@ export default function ProductsTableHeader({searchOptions, setSearchOptions}: {
     }
 
     function CurrentSortArrow() {
-        if (searchOptions.sortDirection === "ASC")
+        if (searchOptions.sortDirection === "DESC")
             return <ArrowDown className={'inline h-4 w-4 ml-1 '}/>;
         else
             return <ArrowUp className={'inline h-4 w-4 ml-1'}/>;

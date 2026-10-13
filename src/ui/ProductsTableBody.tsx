@@ -63,7 +63,7 @@ export default function ProductsTableBody({
 
         if (searchOptions.searchTerm != '') {
             filteredProducts = filteredProducts.filter(product => {
-                product.name.includes(searchOptions.searchTerm!)
+                product.name.toLowerCase().includes(searchOptions.searchTerm!)
             });
         }
 
@@ -86,9 +86,9 @@ export default function ProductsTableBody({
                     return 0;
 
                 if (sortDirection === "DESC")
-                    return result;
-                else
                     return result * -1;
+                else
+                    return result;
             });
 
         } else if (searchOptions.sortBy === 'name') {
@@ -99,9 +99,9 @@ export default function ProductsTableBody({
                 let result = aName.localeCompare(bName);
 
                 if (sortDirection === 'DESC')
-                    return result;
-                else
                     return result * -1;
+                else
+                    return result;
             })
         }
 
