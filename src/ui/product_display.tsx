@@ -83,7 +83,7 @@ export default function ProductDisplay({
                     className="mb-6"
                 />
 
-                <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-[1.6fr_1.3fr_1fr_1fr]">
+                <div className="flex gap-5 sm:flex-row">
                     <fieldset>
                         <legend className="mb-2 text-xs font-medium text-muted-foreground">
                             Price
@@ -92,8 +92,8 @@ export default function ProductDisplay({
                         <div className="flex gap-2">
                             <Input
                                 type="number"
-                                placeholder="Min"
-                                className="min-w-0"
+                                placeholder="$ Min"
+                                className="min-w-0 max-w-32"
                                 value={searchOptions.minPrice ?? ""}
                                 onChange={(e) =>
                                     setSearchOptions(prev => ({
@@ -108,8 +108,8 @@ export default function ProductDisplay({
 
                             <Input
                                 type="number"
-                                placeholder="Max"
-                                className="min-w-0"
+                                placeholder="$ Max"
+                                className="min-w-0 max-w-32"
                                 value={searchOptions.maxPrice ?? ""}
                                 onChange={(e) =>
                                     setSearchOptions(prev => ({
@@ -133,7 +133,7 @@ export default function ProductDisplay({
                             <Input
                                 type="number"
                                 placeholder="Min"
-                                className="min-w-0"
+                                className="min-w-0 max-w-32"
                                 value={searchOptions.minWeight ?? ""}
                                 onChange={(e) =>
                                     setSearchOptions(prev => ({
@@ -148,7 +148,7 @@ export default function ProductDisplay({
                             <Input
                                 type="number"
                                 placeholder="Max"
-                                className="min-w-0"
+                                className="min-w-0 max-w-32"
                                 value={searchOptions.maxWeight ?? ""}
                                 onChange={(e) =>
                                     setSearchOptions(prev => ({
@@ -165,7 +165,7 @@ export default function ProductDisplay({
                 </div>
             </section>
 
-            <section className="mt-8">
+            <section className="mt-6">
                 <h2 className=" text-xl font-semibold tracking-tight mb-2 ">
                     Products
                 </h2>
