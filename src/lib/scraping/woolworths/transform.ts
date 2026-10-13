@@ -31,7 +31,7 @@ export function transformWhoolworthsAPIProduct(apiProduct: WhoolworthsApiProduct
         storeId: woolworthsStoreId,
         name: apiProduct.Name.slice(0,65),
         grams: grams,
-        price: (apiProduct.Price  ?? 0) * 1000,
+        price: apiProduct.Price ? apiProduct.Price * 1000 : null,
         url: 'https://www.woolworths.com.au/shop/productdetails/' + apiProduct.Stockcode,
         measurementTypeId: measurementTypeId,
     } as Product;

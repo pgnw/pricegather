@@ -37,7 +37,7 @@ export default function ProductsTableBody({
 
     for (const product of products) {
         // Products without weight will have their price weight ratio undefined so that they sit at the bottom when sorting using price weight ratio.
-        if (product.grams && product.grams > 0)
+        if (product.grams && product.grams > 0 && product.price && product.price > 0)
             product.priceWeightRatio = (product.price / product.grams);
 
     }
@@ -53,10 +53,12 @@ export default function ProductsTableBody({
         let filteredProducts = products;
 
         filteredProducts = products.filter(product => {
-            return !(product.price > (searchOptions.maxPrice ?? 1000000) * 100
+            if (product.price == null)
+                return false;
+            return (!(product.price > (searchOptions.maxPrice ?? 1000000) * 100
                 || product.price < (searchOptions.minPrice ?? 0) * 100
                 || product.grams != null && product.grams > (searchOptions.maxWeight ?? Number.MAX_VALUE)
-                || product.grams != null && product.grams < (searchOptions.minWeight ?? Number.MIN_VALUE));
+                || product.grams != null && product.grams < (searchOptions.minWeight ?? Number.MIN_VALUE)));
         });
 
         if (searchOptions.searchTerm != '') {
@@ -166,7 +168,8 @@ export default function ProductsTableBody({
                             </div>
 
                             <div className="font-medium">
-                                ${(product.price / 100).toFixed(2)}
+                                {product.price
+                                ? `$${(product.price / 100).toFixed(2)}` : '-'}
                             </div>
 
                             <div className="text-muted-foreground">
