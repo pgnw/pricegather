@@ -106,19 +106,19 @@ export default function ProductDisplay({
                                     sortBy: value as SearchOptions["sortBy"]
                                 }));
                             }}>
-                            <ToggleGroupItem value="name">
+                            <ToggleGroupItem value="name" tabIndex={-1}>
                                 Name
                             </ToggleGroupItem>
 
-                            <ToggleGroupItem value="price">
+                            <ToggleGroupItem value="price" tabIndex={-1}>
                                 Price
                             </ToggleGroupItem>
 
-                            <ToggleGroupItem value="grams">
+                            <ToggleGroupItem value="grams" tabIndex={-1}>
                                 Weight
                             </ToggleGroupItem>
 
-                            <ToggleGroupItem value="priceWeightRatio">
+                            <ToggleGroupItem value="priceWeightRatio" tabIndex={-1}>
                                 $ / 100g
                             </ToggleGroupItem>
                         </ToggleGroup>
@@ -144,11 +144,11 @@ export default function ProductDisplay({
                                         value as SearchOptions["sortDirection"]
                                 }));
                             }}>
-                            <ToggleGroupItem value="ASC">
+                            <ToggleGroupItem value="ASC" tabIndex={-1}>
                                 Ascending
                             </ToggleGroupItem>
 
-                            <ToggleGroupItem value="DESC">
+                            <ToggleGroupItem value="DESC" tabIndex={-1}>
                                 Descending
                             </ToggleGroupItem>
                         </ToggleGroup>
