@@ -97,11 +97,11 @@ export default function ProductsTableBody({
         result.hits.map(hit => hit.document);
 
     displayProducts = displayProducts.filter(product => {
-        return !(product.price > (searchOptions.maxPrice ?? 1000000) * 100 || product.price < (searchOptions.minPrice  ?? Number.MIN_VALUE) * 100 ||
-            product.grams > (searchOptions.maxWeight ?? 100000) || product.grams < (searchOptions.minWeight ?? Number.MIN_VALUE));
+        return !(product.price > (searchOptions.maxPrice ?? 1000000) * 100 || product.price < (searchOptions.minPrice  ?? 0) * 100 ||
+            product.grams > (searchOptions.maxWeight ?? Number.MAX_VALUE) || product.grams < (searchOptions.minWeight ?? Number.MIN_VALUE));
     })
 
-
+    console.log('searching')
     const rowVirtualizer =
         useWindowVirtualizer({
             count: displayProducts.length,
