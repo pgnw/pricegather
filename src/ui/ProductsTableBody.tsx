@@ -63,9 +63,10 @@ export default function ProductsTableBody({
 
         if (searchOptions.searchTerm != '') {
             filteredProducts = filteredProducts.filter(product => {
-                product.name.toLowerCase().includes(searchOptions.searchTerm!)
+                return product.name.toLowerCase().includes(searchOptions.searchTerm!)
             });
         }
+
 
         if (searchOptions.sortBy === 'priceWeightRatio' || searchOptions.sortBy === 'price' || searchOptions.sortBy === 'grams') {
             filteredProducts = filteredProducts.sort((a, b) => {
