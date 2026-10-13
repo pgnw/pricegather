@@ -237,7 +237,7 @@ export default function ProductDisplay({
             </section>
 
             <section className="mt-8">
-                <h2 className="text-xl font-semibold tracking-tight mb-1 ">
+                <h2 className=" text-xl font-semibold tracking-tight mb-2 ">
                     Products
                 </h2>
 
