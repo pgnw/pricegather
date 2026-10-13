@@ -25,13 +25,18 @@ export type OramaProduct = {
 };
 
 export function ProductPrismaToOrama(product: ProductWithMeasurement): OramaProduct {
+    let priceWeightRatio = 0;
+
+    if (product.grams && product.grams > 0 && product.price && product.price > 0)
+        priceWeightRatio = Math.round((product.price / product.grams) * 1000) / 1000;
+
     return {
         productId: product.id,
         name: product.name,
         description: product.description || "",
-        price: product.price,
+        price: product.price || 0,
         grams: product.grams || 0,
-        priceWeightRatio: product.grams != undefined ? Math.round((product.price / product.grams) * 1000) / 1000 : 0,
+        priceWeightRatio: priceWeightRatio,
         url: product.url,
         measurementType: product?.measurementType?.measurementType ?? '',
     };
@@ -67,7 +72,7 @@ export function compareNullableNumber(
         : b - a;
 }
 
-export function getWeightString(product:  DisplayProduct): string {
+export function getWeightString(product: DisplayProduct): string {
     if (product.grams == null || product.measurementType == null)
         return "-";
 
