@@ -154,8 +154,7 @@ export default function ProductDisplay({
                         </ToggleGroup>
                     </fieldset>
 
-
-                    <fieldset>
+                    <fieldset className={'flex'}>
                         <legend className="ml-1 mb-2 text-xs font-medium text-muted-foreground">
                             Price
                         </legend>
@@ -175,7 +174,6 @@ export default function ProductDisplay({
                                     }))
                                 }
                             />
-
                             <Input
                                 type="number"
                                 placeholder="Max"
@@ -184,6 +182,44 @@ export default function ProductDisplay({
                                     setSearchOptions(prev => ({
                                         ...prev,
                                         maxPrice:
+                                            e.target.value === ""
+                                                ? undefined
+                                                : Number(e.target.value),
+                                    }))
+                                }
+                            />
+                        </div>
+                    </fieldset>
+
+                    <fieldset>
+                        <legend className="ml-1 mb-2 text-xs font-medium text-muted-foreground">
+                            Weight (grams)
+                        </legend>
+
+                        <div className="flex gap-3">
+                            <Input
+                                type="number"
+                                placeholder="Min"
+                                value={searchOptions.minWeight ?? ""}
+                                onChange={(e) =>
+                                    setSearchOptions(prev => ({
+                                        ...prev,
+                                        minWeight:
+                                            e.target.value === ""
+                                                ? undefined
+                                                : Number(e.target.value),
+                                    }))
+                                }
+                            />
+
+                            <Input
+                                type="number"
+                                placeholder="Max"
+                                value={searchOptions.maxWeight ?? ""}
+                                onChange={(e) =>
+                                    setSearchOptions(prev => ({
+                                        ...prev,
+                                        maxWeight:
                                             e.target.value === ""
                                                 ? undefined
                                                 : Number(e.target.value),
@@ -204,7 +240,7 @@ export default function ProductDisplay({
                 {/*    <ProductsTableLoadedCount count={returnedProductsCount}/>*/}
                 {/*</Suspense>*/}
 
-                <ProductsTableHeader searchOptions={searchOptions} setSearchOptions={setSearchOptions} />
+                <ProductsTableHeader searchOptions={searchOptions} setSearchOptions={setSearchOptions}/>
 
                 <Suspense fallback={<ProductsTableBodyLoading/>}>
                     <ProductsTableBody productsPromise={productsPromise} searchOptions={searchOptions}

@@ -98,7 +98,7 @@ export default function ProductsTableBody({
 
     displayProducts = displayProducts.filter(product => {
         return !(product.price > (searchOptions.maxPrice ?? 1000000) * 100 || product.price < (searchOptions.minPrice  ?? Number.MIN_VALUE) * 100 ||
-            product.grams > (searchOptions.maxWeight ?? 100000) * 100 || product.grams < (searchOptions.minWeight ?? Number.MIN_VALUE) * 100);
+            product.grams > (searchOptions.maxWeight ?? 100000) || product.grams < (searchOptions.minWeight ?? Number.MIN_VALUE));
     })
 
 
