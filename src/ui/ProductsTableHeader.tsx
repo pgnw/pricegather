@@ -45,14 +45,12 @@ export default function ProductsTableHeader({searchOptions, setSearchOptions}: {
 
                 <button type="button" className="text-left cursor-pointer hover:text-foreground"
                         onClick={() => {
-                            if (searchOptions.sortBy != 'name') {
-                                setSearchOptions(prev => ({
-                                    ...prev,
-                                    sortBy: "name",
-                                }))
-                            } else {
-                                invertSortDirection();
-                            }
+                            setSearchOptions(prev => ({
+                                ...prev,
+                                sortBy: "name",
+                            }))
+                            invertSortDirection();
+
                         }}>
                     <span>Product</span>
                     {searchOptions.sortBy === "name" && <CurrentSortArrow/>}
@@ -62,42 +60,41 @@ export default function ProductsTableHeader({searchOptions, setSearchOptions}: {
 
 
             <button type="button" className="text-left cursor-pointer hover:text-foreground" onClick={() => {
-                if (searchOptions.sortBy != 'grams') {
-                    setSearchOptions(prev => ({
-                        ...prev,
-                        sortBy: "grams",
-                    }))
-                } else {
-                    invertSortDirection();
-                }
+                setSearchOptions(prev => ({
+                    ...prev,
+                    sortBy: "grams",
+                }))
+
+                invertSortDirection();
+
             }}>
                 <span>Weight</span>
                 {searchOptions.sortBy === "grams" && <CurrentSortArrow/>}
             </button>
 
             <button type="button" className="text-left cursor-pointer hover:text-foreground" onClick={() => {
-                if (searchOptions.sortBy != 'price') {
-                    setSearchOptions(prev => ({
-                        ...prev,
-                        sortBy: "price",
-                    }))
-                } else {
-                    invertSortDirection();
-                }
+
+                setSearchOptions(prev => ({
+                    ...prev,
+                    sortBy: "price",
+                }))
+
+                invertSortDirection();
+
             }}>
                 <span>Price</span>
                 {searchOptions.sortBy === "price" && <CurrentSortArrow/>}
             </button>
 
             <button type="button" className="text-left cursor-pointer hover:text-foreground" onClick={() => {
-                if (searchOptions.sortBy != 'priceWeightRatio') {
-                    setSearchOptions(prev => ({
-                        ...prev,
-                        sortBy: "priceWeightRatio",
-                    }))
-                } else {
-                    invertSortDirection();
-                }
+
+                setSearchOptions(prev => ({
+                    ...prev,
+                    sortBy: "priceWeightRatio",
+                }))
+
+                invertSortDirection();
+
             }}>
                 <span>$ / 100g</span>
                 {searchOptions.sortBy === "priceWeightRatio" && <CurrentSortArrow/>}
