@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import {scrape} from "@/lib/scraping";
+import {scrape} from "@/lib/scraping/scraping";
 
 export async function GET() {
     // const authHeader = req.headers.get('Authorization');
