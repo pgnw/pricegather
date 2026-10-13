@@ -39,11 +39,6 @@ export async function scrapeWoolworths() {
                             continue;
                         }
 
-                        if (apiProduct.Name.includes('Yogo Chocolate With Choc Chip Custard Dessert') || apiProduct.Name == 'Cumquat')
-                        {
-                            console.log('bruh moemet');
-                        }
-
                         const product = transformWhoolworthsAPIProduct(apiProduct);
                         totalProducts.set(product.id, product);
                     }
