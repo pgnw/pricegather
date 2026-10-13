@@ -18,6 +18,7 @@ import {
 import {cn} from "@/lib/utils";
 import ProductsTableHeader from "@/ui/ProductsTableHeader";
 import {ProductWithMeasurement} from "@/lib/data/products";
+import {DisplayProduct} from "@/lib/types";
 
 export default function ProductsTableBody({
                                               searchOptions,
@@ -30,24 +31,16 @@ export default function ProductsTableBody({
 }) {
     'use no memo'; // Need this due to tanstack virtual breaking
     const containerRef = useRef<HTMLDivElement>(null);
-    const products = use(productsPromise);
 
-    const db = useMemo(() => {
 
-        const oramaDb = create({
-            schema: OramaProductSchema
-        });
+    const products = use(productsPromise) as DisplayProduct[];
 
-        products.forEach(product => {
-            insert(
-                oramaDb,
-                ProductPrismaToOrama(product)
-            );
-        });
+    for (const product of products) {
+        // Products without weight will have their price weight ratio undefined so that they sit at the bottom when sorting using price weight ratio.
+        if (product.grams && product.grams > 0)
+            product.priceWeightRatio = (product.price / product.grams);
 
-        return oramaDb;
-
-    }, [products]);
+    }
 
 
     const sortBy =
@@ -56,58 +49,70 @@ export default function ProductsTableBody({
     const sortDirection =
         searchOptions.sortDirection ?? "ASC";
 
-    const resultAsync = search(db, {
-        term: searchOptions.searchTerm ?? "",
-        limit: 10000,
-        threshold: 0,
+    const displayProducts = useMemo(() => {
+        let filteredProducts = products;
 
-        sortBy: (a, b) => {
-            const productA = a[2];
-            const productB = b[2];
+        filteredProducts = products.filter(product => {
+            return !(product.price > (searchOptions.maxPrice ?? 1000000) * 100
+                || product.price < (searchOptions.minPrice ?? 0) * 100
+                || product.grams != null && product.grams > (searchOptions.maxWeight ?? Number.MAX_VALUE)
+                || product.grams != null && product.grams < (searchOptions.minWeight ?? Number.MIN_VALUE));
+        });
 
-            if (sortBy === "name") {
+        if (searchOptions.searchTerm != '') {
+            filteredProducts = filteredProducts.filter(product => {
+                product.name.includes(searchOptions.searchTerm!)
+            });
+        }
 
-                const comparison =
-                    productA.name.localeCompare(
-                        productB.name
-                    );
+        if (searchOptions.sortBy === 'priceWeightRatio' || searchOptions.sortBy === 'price' || searchOptions.sortBy === 'grams') {
+            filteredProducts = filteredProducts.sort((a, b) => {
+                const aVal = a[sortBy];
+                const bVal = b[sortBy];
+                let result = 0;
 
-                return sortDirection === "ASC"
-                    ? comparison
-                    : -comparison;
-            } else {
-                const aValue =
-                    productA[sortBy] as number;
+                if (aVal == null)
+                    return 1;
+                else if (bVal == null)
+                    return -1;
 
-                const bValue =
-                    productB[sortBy] as number;
+                if (aVal < bVal)
+                    result = -1;
+                else if (aVal > bVal)
+                    result = 1;
+                else
+                    return 0;
 
-                return compareNullableNumber(
-                    aValue,
-                    bValue,
-                    sortDirection
-                );
-            }
-        },
-    });
+                if (sortDirection === "DESC")
+                    return result;
+                else
+                    return result * -1;
+            });
 
-    const result = resultAsync as Exclude<typeof resultAsync, Promise<unknown>>;
+        } else if (searchOptions.sortBy === 'name') {
+            filteredProducts = filteredProducts.sort((a, b) => {
+                const aName = a.name.toLowerCase();
+                const bName = b.name.toLowerCase();
 
-    let displayProducts =
-        result.hits.map(hit => hit.document);
+                let result = aName.localeCompare(bName);
 
-    displayProducts = displayProducts.filter(product => {
-        return !(product.price > (searchOptions.maxPrice ?? 1000000) * 100 || product.price < (searchOptions.minPrice  ?? 0) * 100 ||
-            product.grams > (searchOptions.maxWeight ?? Number.MAX_VALUE) || product.grams < (searchOptions.minWeight ?? Number.MIN_VALUE));
-    })
+                if (sortDirection === 'DESC')
+                    return result;
+                else
+                    return result * -1;
+            })
+        }
 
-    console.log('searching')
+        return filteredProducts;
+    }, [searchOptions, products]);
+
+
     const rowVirtualizer =
         useWindowVirtualizer({
             count: displayProducts.length,
             estimateSize: () => 32,
             overscan: 50,
-            getItemKey: (index) => displayProducts[index].productId,
+            getItemKey: (index) => displayProducts[index].id,
         });
     rowVirtualizer.shouldAdjustScrollPositionOnItemSizeChange = () => false;
 
@@ -132,7 +137,7 @@ export default function ProductsTableBody({
 
                     return (
                         <div
-                            key={product.productId}
+                            key={product.id}
                             ref={rowVirtualizer.measureElement}
                             data-index={virtualRow.index}
                             className={cn(
@@ -165,7 +170,7 @@ export default function ProductsTableBody({
                             </div>
 
                             <div className="text-muted-foreground">
-                                {product.priceWeightRatio > 0
+                                {product.priceWeightRatio
                                     ? `$${product.priceWeightRatio.toFixed(2)}`
                                     : "—"}
                             </div>

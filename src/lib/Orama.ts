@@ -1,5 +1,6 @@
 import {Prisma, Product} from "@/generated/prisma/client";
 import {ProductWithMeasurement} from "@/lib/data/products";
+import {DisplayProduct} from "@/lib/types";
 
 export const OramaProductSchema = {
     productId: "string",
@@ -53,28 +54,31 @@ export type SearchFilter = {
 };
 
 export function compareNullableNumber(
-    a: number,
-    b: number,
+    a: number | null | undefined,
+    b: number | null | undefined,
     direction: "ASC" | "DESC"
 ) {
-    const aMissing = a === 0;
-    const bMissing = b === 0;
 
-    if (aMissing && !bMissing) return 1;
-    if (!aMissing && bMissing) return -1;
+    if (a == null) return 1;
+    if (b == null) return -1;
 
     return direction === "ASC"
         ? a - b
         : b - a;
 }
 
-export function getWeightString(product: OramaProduct): string {
-    if (product.measurementType === "weight") {
+export function getWeightString(product:  DisplayProduct): string {
+    if (product.grams == null || product.measurementType == null)
+        return "-";
+
+    const measurementType = product.measurementType.measurementType;
+
+    if (measurementType === "weight") {
         if (product.grams >= 1000)
             return `${product.grams / 1000} kg`;
         else if (product.grams > 0)
             return `${product.grams} g`;
-    } else if (product.measurementType === "volume") {
+    } else if (measurementType === "volume") {
         if (product.grams >= 1000)
             return `${product.grams / 1000} L`;
         else if (product.grams > 0)
