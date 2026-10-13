@@ -69,8 +69,7 @@ export default function ProductDisplay({
                 </p>
             </header>
 
-            <section className="rounded-md border bg-background p-4">
-
+            <section className="rounded-md border bg-background p-5">
                 <Input
                     type="search"
                     placeholder="Search products..."
@@ -78,23 +77,22 @@ export default function ProductDisplay({
                     onChange={(e) =>
                         setSearchOptions(prev => ({
                             ...prev,
-                            searchTerm: e.target.value
+                            searchTerm: e.target.value,
                         }))
                     }
-                    className="mb-5"
+                    className="mb-6"
                 />
 
-                <div className="flex flex-col gap-5 sm:flex-row">
-
+                <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-[1.6fr_1.3fr_1fr_1fr]">
                     <fieldset>
-                        <legend className="mb-2 ml-0.5 text-xs font-medium text-muted-foreground">
+                        <legend className="mb-2 text-xs font-medium text-muted-foreground">
                             Sort by
                         </legend>
 
                         <ToggleGroup
                             value={[searchOptions.sortBy ?? "name"]}
                             variant="outline"
-                            className="justify-start"
+                            className="flex flex-wrap justify-start"
                             onValueChange={(values) => {
                                 const value = values[0];
 
@@ -103,9 +101,10 @@ export default function ProductDisplay({
 
                                 setSearchOptions(prev => ({
                                     ...prev,
-                                    sortBy: value as SearchOptions["sortBy"]
+                                    sortBy: value as SearchOptions["sortBy"],
                                 }));
-                            }}>
+                            }}
+                        >
                             <ToggleGroupItem value="name" tabIndex={-1}>
                                 Name
                             </ToggleGroupItem>
@@ -124,26 +123,28 @@ export default function ProductDisplay({
                         </ToggleGroup>
                     </fieldset>
 
-
                     <fieldset>
-                        <legend className="ml-0.5 mb-2 text-xs font-medium text-muted-foreground">
+                        <legend className="mb-2 text-xs font-medium text-muted-foreground">
                             Direction
                         </legend>
 
                         <ToggleGroup
                             value={[searchOptions.sortDirection ?? "ASC"]}
                             variant="outline"
+                            className="flex flex-wrap justify-start"
                             onValueChange={(values) => {
                                 const value = values[0];
 
                                 if (!value)
                                     return;
+
                                 setSearchOptions(prev => ({
                                     ...prev,
                                     sortDirection:
-                                        value as SearchOptions["sortDirection"]
+                                        value as SearchOptions["sortDirection"],
                                 }));
-                            }}>
+                            }}
+                        >
                             <ToggleGroupItem value="ASC" tabIndex={-1}>
                                 Ascending
                             </ToggleGroupItem>
@@ -154,15 +155,16 @@ export default function ProductDisplay({
                         </ToggleGroup>
                     </fieldset>
 
-                    <fieldset className={'flex'}>
-                        <legend className="ml-1 mb-2 text-xs font-medium text-muted-foreground">
+                    <fieldset>
+                        <legend className="mb-2 text-xs font-medium text-muted-foreground">
                             Price
                         </legend>
 
-                        <div className="flex gap-3">
+                        <div className="flex gap-2">
                             <Input
                                 type="number"
                                 placeholder="Min"
+                                className="min-w-0"
                                 value={searchOptions.minPrice ?? ""}
                                 onChange={(e) =>
                                     setSearchOptions(prev => ({
@@ -174,9 +176,11 @@ export default function ProductDisplay({
                                     }))
                                 }
                             />
+
                             <Input
                                 type="number"
                                 placeholder="Max"
+                                className="min-w-0"
                                 value={searchOptions.maxPrice ?? ""}
                                 onChange={(e) =>
                                     setSearchOptions(prev => ({
@@ -192,14 +196,15 @@ export default function ProductDisplay({
                     </fieldset>
 
                     <fieldset>
-                        <legend className="ml-1 mb-2 text-xs font-medium text-muted-foreground">
+                        <legend className="mb-2 text-xs font-medium text-muted-foreground">
                             Weight (grams)
                         </legend>
 
-                        <div className="flex gap-3">
+                        <div className="flex gap-2">
                             <Input
                                 type="number"
                                 placeholder="Min"
+                                className="min-w-0"
                                 value={searchOptions.minWeight ?? ""}
                                 onChange={(e) =>
                                     setSearchOptions(prev => ({
@@ -211,10 +216,10 @@ export default function ProductDisplay({
                                     }))
                                 }
                             />
-
                             <Input
                                 type="number"
                                 placeholder="Max"
+                                className="min-w-0"
                                 value={searchOptions.maxWeight ?? ""}
                                 onChange={(e) =>
                                     setSearchOptions(prev => ({
