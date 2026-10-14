@@ -119,6 +119,8 @@ export default function ProductsTableBody({
         });
     rowVirtualizer.shouldAdjustScrollPositionOnItemSizeChange = () => false;
 
+    const product = products[0];
+    const a= (product.price! / 100).toFixed(2);
 
     return (<>
         <div
@@ -171,6 +173,8 @@ export default function ProductsTableBody({
                             <div className="font-medium">
                                 {product.price
                                 ? `$${(product.price / 100).toFixed(2)}` : '-'}
+                                <br/>
+                                Real price: {product.price}
                             </div>
 
                             <div className="text-muted-foreground">
