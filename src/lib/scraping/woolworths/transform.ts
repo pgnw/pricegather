@@ -29,9 +29,9 @@ export function transformWhoolworthsAPIProduct(apiProduct: WhoolworthsApiProduct
     const product = {
         id: 'w_' + apiProduct.Stockcode.toString(),
         storeId: woolworthsStoreId,
-        name: apiProduct.Name.slice(0,65),
+        name: apiProduct.Name.slice(0, 65),
         grams: grams,
-        price: apiProduct.Price ? apiProduct.Price * 1000 : null,
+        price: apiProduct.Price ? apiProduct.Price * 100 : null,
         url: 'https://www.woolworths.com.au/shop/productdetails/' + apiProduct.Stockcode,
         measurementTypeId: measurementTypeId,
     } as Product;
