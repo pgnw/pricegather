@@ -87,9 +87,9 @@ export default function ProductsTableBody({
                     return 0;
 
                 if (sortDirection === "DESC")
-                    return result * -1;
-                else
                     return result;
+                else
+                    return result * -1;
             });
 
         } else if (searchOptions.sortBy === 'name') {
@@ -100,9 +100,9 @@ export default function ProductsTableBody({
                 let result = aName.localeCompare(bName);
 
                 if (sortDirection === 'DESC')
-                    return result * -1;
-                else
                     return result;
+                else
+                    return result * -1;
             })
         }
 
