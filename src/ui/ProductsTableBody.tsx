@@ -173,8 +173,6 @@ export default function ProductsTableBody({
                             <div className="font-medium">
                                 {product.price
                                 ? `$${(product.price / 100).toFixed(2)}` : '-'}
-                                <br/>
-                                Real price: {product.price}
                             </div>
 
                             <div className="text-muted-foreground">
