@@ -47,7 +47,7 @@ export default function ProductsTableBody({
         searchOptions.sortBy ?? "name";
 
     const sortDirection =
-        searchOptions.sortDirection ?? "ASC";
+        searchOptions.sortDirection ?? "DESC";
 
     const displayProducts = useMemo(() => {
         let filteredProducts = products;

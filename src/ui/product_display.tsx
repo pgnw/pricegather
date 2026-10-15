@@ -42,7 +42,7 @@ export default function ProductDisplay({
         useState<SearchOptions>({
             searchTerm: "",
             sortBy: "name",
-            sortDirection: "ASC",
+            sortDirection: "DESC",
             minPrice: undefined,
             maxPrice: undefined,
             minWeight: undefined,

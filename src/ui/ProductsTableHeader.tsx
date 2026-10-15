@@ -18,8 +18,6 @@ export default function ProductsTableHeader({searchOptions, setSearchOptions}: {
 
 
     function invertSortDirection() {
-
-
         setSearchOptions(prev => ({
             ...prev,
             sortDirection: searchOptions.sortDirection === "ASC" ? "DESC" : "ASC"
