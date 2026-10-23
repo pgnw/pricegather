@@ -69,7 +69,7 @@ export default function ProductDisplay({
                 </p>
             </header>
 
-            <section className="rounded-md border bg-background p-5">
+            <section className="rounded-md border bg-background p-3 sm:p-5">
                 <Input
                     type="search"
                     placeholder="Search products..."

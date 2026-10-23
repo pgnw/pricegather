@@ -26,22 +26,21 @@ export default function ProductsTableHeader({searchOptions, setSearchOptions}: {
 
     function CurrentSortArrow() {
         if (searchOptions.sortDirection === "DESC")
-            return <ArrowDown className={'inline h-4 w-4 ml-1 '}/>;
+            return <ArrowDown className="ml-0.5 inline h-3 w-3 sm:ml-1 sm:h-4 sm:w-4"/>;
         else
-            return <ArrowUp className={'inline h-4 w-4 ml-1'}/>;
+            return <ArrowUp className="ml-0.5 inline h-3 w-3 sm:ml-1 sm:h-4 sm:w-4"/>;
 
     }
 
 
     return (<div
             className={cn(
-                "grid",
-                "grid-cols-[minmax(300px,1fr)_120px_120px_120px]",
-                "gap-4 rounded-t-md border bg-muted/40",
-                "px-4 py-3 text-sm font-medium text-muted-foreground"
+                "grid grid-cols-3 sm:grid-cols-[minmax(0,1fr)_120px_120px_120px]",
+                "gap-x-2 gap-y-1 sm:gap-4 rounded-t-md border bg-muted/40",
+                "px-2 py-2 sm:px-4 sm:py-3 text-xs sm:text-sm font-medium text-muted-foreground"
             )}
         >
-            <div>
+            <div className="col-span-3 sm:col-span-1">
 
                 <button type="button" className="text-left cursor-pointer hover:text-foreground"
                         onClick={() => {
@@ -53,14 +52,14 @@ export default function ProductsTableHeader({searchOptions, setSearchOptions}: {
                             }))
 
                         }}>
-                    <span>Product</span>
+                    <span className="text-sm">Product</span>
                     {searchOptions.sortBy === "name" && <CurrentSortArrow/>}
 
                 </button>
             </div>
 
 
-            <button type="button" className="text-left cursor-pointer hover:text-foreground" onClick={() => {
+            <button type="button" className="whitespace-nowrap text-left cursor-pointer hover:text-foreground" onClick={() => {
                 if (searchOptions.sortBy === 'grams')
                     invertSortDirection();
                 setSearchOptions(prev => ({
@@ -73,7 +72,7 @@ export default function ProductsTableHeader({searchOptions, setSearchOptions}: {
                 {searchOptions.sortBy === "grams" && <CurrentSortArrow/>}
             </button>
 
-            <button type="button" className="text-left cursor-pointer hover:text-foreground" onClick={() => {
+            <button type="button" className="whitespace-nowrap text-left cursor-pointer hover:text-foreground" onClick={() => {
                 if (searchOptions.sortBy === 'price')
                     invertSortDirection();
                 setSearchOptions(prev => ({
@@ -86,7 +85,7 @@ export default function ProductsTableHeader({searchOptions, setSearchOptions}: {
                 {searchOptions.sortBy === "price" && <CurrentSortArrow/>}
             </button>
 
-            <button type="button" className="text-left cursor-pointer hover:text-foreground" onClick={() => {
+            <button type="button" className="whitespace-nowrap text-left cursor-pointer hover:text-foreground" onClick={() => {
                 if (searchOptions.sortBy === 'priceWeightRatio')
                     invertSortDirection();
                 setSearchOptions(prev => ({

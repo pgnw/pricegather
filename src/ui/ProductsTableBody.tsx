@@ -113,7 +113,7 @@ export default function ProductsTableBody({
     const rowVirtualizer =
         useWindowVirtualizer({
             count: displayProducts.length,
-            estimateSize: () => 32,
+            estimateSize: () => 56,
             overscan: 50,
             getItemKey: (index) => displayProducts[index].id,
         });
@@ -146,36 +146,35 @@ export default function ProductsTableBody({
                             ref={rowVirtualizer.measureElement}
                             data-index={virtualRow.index}
                             className={cn(
-                                "absolute left-0 top-0 grid w-full",
-                                "grid-cols-[minmax(300px,1fr)_120px_120px_120px]",
-                                "items-center gap-4 border-b bg-background",
-                                "px-4 py-3 text-sm hover:bg-muted/30"
+                                "absolute left-0 top-0 grid w-full grid-cols-3 sm:grid-cols-[minmax(0,1fr)_120px_120px_120px]",
+                                "items-center gap-x-2 gap-y-1 sm:gap-4 border-b bg-background",
+                                "px-2 py-2 sm:px-4 sm:py-3 text-sm hover:bg-muted/30"
                             )}
                             style={{
                                 transform: `translateY(${virtualRow.start}px)`
                             }}
                         >
-                            <div className="min-w-0">
+                            <div className="col-span-3 min-w-0 sm:col-span-1">
                                 <a
                                     href={product.url}
                                     target="_blank"
                                     rel="noreferrer"
-                                    className="truncate font-medium hover:underline "
+                                    className="block truncate font-medium hover:underline"
                                 >
                                     {product.name}
                                 </a>
                             </div>
 
-                            <div className="text-muted-foreground">
+                            <div className="whitespace-nowrap text-muted-foreground">
                                 {getWeightString(product)}
                             </div>
 
-                            <div className="font-medium">
+                            <div className="whitespace-nowrap font-medium">
                                 {product.price
                                 ? `$${(product.price / 100).toFixed(2)}` : '-'}
                             </div>
 
-                            <div className="text-muted-foreground">
+                            <div className="whitespace-nowrap text-muted-foreground">
                                 {product.priceWeightRatio
                                     ? `$${product.priceWeightRatio.toFixed(2)}`
                                     : "—"}
