@@ -19,6 +19,13 @@ import {cn} from "@/lib/utils";
 import ProductsTableHeader from "@/ui/ProductsTableHeader";
 import {ProductWithMeasurement} from "@/lib/data/products";
 import {DisplayProduct} from "@/lib/types";
+import {colesStoreId} from "@/lib/data/staticData";
+
+const storeRowBackgrounds: Record<string, string> = {
+    colesStoreId: "bg-red-500/5 hover:bg-red-500/10",
+    whoolworthsStoreId: "bg-blue-600/5 hover:bg-blue-600/10",
+    aldiStoreId: "bg-green-600/5 hover:bg-green-600/10",
+};
 
 export default function ProductsTableBody({
                                               searchOptions,
@@ -61,12 +68,18 @@ export default function ProductsTableBody({
                 || product.grams != null && product.grams < (searchOptions.minWeight ?? Number.MIN_VALUE)));
         });
 
-        if (searchOptions.searchTerm != '') {
+        if (searchOptions.searchTerm !== "") {
+            const searchWords = searchOptions.searchTerm!
+                .toLowerCase()
+                .split(/\s+/)
+                .filter(Boolean);
+
             filteredProducts = filteredProducts.filter(product => {
-                return product.name.toLowerCase().includes(searchOptions.searchTerm!)
+                const name = product.name.toLowerCase();
+
+                return searchWords.every(word => name.includes(word));
             });
         }
-
 
         if (searchOptions.sortBy === 'priceWeightRatio' || searchOptions.sortBy === 'price' || searchOptions.sortBy === 'grams') {
             filteredProducts = filteredProducts.sort((a, b) => {
@@ -147,8 +160,9 @@ export default function ProductsTableBody({
                             data-index={virtualRow.index}
                             className={cn(
                                 "absolute left-0 top-0 grid w-full grid-cols-3 sm:grid-cols-[minmax(0,1fr)_120px_120px_120px]",
-                                "items-center gap-x-2 gap-y-1 sm:gap-4 border-b bg-background",
-                                "px-2 py-2 sm:px-4 sm:py-3 text-sm hover:bg-muted/30"
+                                "items-center gap-x-2 gap-y-1 sm:gap-4 border-b",
+                                "px-2 py-2 sm:px-4 sm:py-3 text-sm",
+                                storeRowBackgrounds[product.storeId] ?? "bg-background hover:bg-muted/30"
                             )}
                             style={{
                                 transform: `translateY(${virtualRow.start}px)`
