@@ -11,11 +11,13 @@ export function transformColesAPIProduct(apiProduct: ColesProduct): Product {
         const regex = new RegExp("([0-9]*)(.*)");
         const result = regex.exec(apiProduct.size);
         if (result != null) {
-            const [, weightNumberStr, weightSymbol] = result;
+            let [, weightNumberStr, weightSymbol] = result;
 
-            if (weightSymbol == "g" || weightSymbol == "KG") {
+            weightSymbol = weightSymbol.toLowerCase();
+
+            if (weightSymbol == "g" || weightSymbol == "kg") {
                 measurementTypeId = weightMeasurementType?.id;
-            } else if (weightSymbol == 'ml' || weightSymbol == 'L') {
+            } else if (weightSymbol == 'ml' || weightSymbol == 'l') {
                 measurementTypeId = volumeMeasurementType?.id;
             }
 

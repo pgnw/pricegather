@@ -11,17 +11,19 @@ export function transformAldiAPIProduct(apiProduct: AldiAPIProduct): Product {
         const regex = new RegExp("([0-9\.]*)\\s*(\\S.*)");
         const result = regex.exec(apiProduct.sellingSize);
         if (result != null) {
-            const [, weightNumberStr, weightSymbol] = result;
+            let [, weightNumberStr, weightSymbol] = result;
 
-            if (weightSymbol.toLocaleLowerCase() == "g" || weightSymbol.toLocaleLowerCase() == "kg") {
+            weightSymbol = weightSymbol.toLowerCase();
+
+            if (weightSymbol == "g" || weightSymbol == "kg") {
                 measurementTypeId = weightMeasurementType?.id;
-            } else if (weightSymbol.toLowerCase() == 'ml' || weightSymbol.toLocaleLowerCase() == 'l') {
+            } else if (weightSymbol == 'ml' || weightSymbol == 'l') {
                 measurementTypeId = volumeMeasurementType?.id;
             }
 
             if (weightSymbol == "g" || weightSymbol == "ml") {
                 grams = Number(weightNumberStr);
-            } else if (weightSymbol == "kg" || weightSymbol == "L") {
+            } else if (weightSymbol == "kg" || weightSymbol == "l") {
                 grams = Number(weightNumberStr) * 1000;
             }
         }
