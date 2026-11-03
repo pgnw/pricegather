@@ -18,9 +18,9 @@ export function transformWhoolworthsAPIProduct(apiProduct: WhoolworthsApiProduct
                 measurementTypeId = volumeMeasurementType?.id;
             }
 
-            if (weightSymbol == "g" || weightSymbol == "ml") {
+            if (weightSymbol.toLocaleLowerCase() == "g" || weightSymbol.toLocaleLowerCase() == "ml") {
                 grams = Number(weightNumberStr);
-            } else if (weightSymbol == "KG" || weightSymbol == "L") {
+            } else if (weightSymbol.toLocaleLowerCase() == "kg" || weightSymbol.toLocaleLowerCase() == "l") {
                 grams = Number(weightNumberStr) * 1000;
             }
         }

@@ -4,6 +4,7 @@ import {prisma} from "@/lib/prisma";
 import {aldiStoreId, volumeMeasurementType, weightMeasurementType} from "@/lib/data/staticData";
 
 export function transformAldiAPIProduct(apiProduct: AldiAPIProduct): Product {
+
     let grams = null;
     let measurementTypeId = null;
     if (apiProduct.sellingSize != null) {
@@ -12,9 +13,9 @@ export function transformAldiAPIProduct(apiProduct: AldiAPIProduct): Product {
         if (result != null) {
             const [, weightNumberStr, weightSymbol] = result;
 
-            if (weightSymbol == "g" || weightSymbol == "kg") {
+            if (weightSymbol.toLocaleLowerCase() == "g" || weightSymbol.toLocaleLowerCase() == "kg") {
                 measurementTypeId = weightMeasurementType?.id;
-            } else if (weightSymbol == 'ml' || weightSymbol == 'L') {
+            } else if (weightSymbol.toLowerCase() == 'ml' || weightSymbol.toLocaleLowerCase() == 'l') {
                 measurementTypeId = volumeMeasurementType?.id;
             }
 
