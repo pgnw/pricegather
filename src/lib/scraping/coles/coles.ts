@@ -23,7 +23,9 @@ export async function scrapeColes() {
     await setup();
 
     const categories = (await getCategories(subscriptionKey)).menuItems.items;
-    const totalProducts: ColesProduct[] = [];
+
+    // Using a map to avoid duplicates.
+    const totalProductsMap = new Map<number, ColesProduct>();
 
     // Import categories one at a time to avoid usage limits.
     const limiter = new Bottleneck({
@@ -36,18 +38,15 @@ export async function scrapeColes() {
                 return getProducts(category)
             }
         );
-        totalProducts.push(...products);
+
+        products.forEach(product => {
+            totalProductsMap.set(product.id, product);
+        })
     }
 
-
-    const totalProductsMap = new Map(totalProducts.map(p => [p.id, p]));
-
-    const aa = 'a';
-
-    const products = totalProducts.map(p => transformColesAPIProduct(p));
+    const products = totalProductsMap.values().toArray().map(p => transformColesAPIProduct(p));
 
     await populateStore(colesStoreId,products);
-
 }
 
 async function setup() {
