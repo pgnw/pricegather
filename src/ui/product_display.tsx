@@ -77,7 +77,7 @@ export default function ProductDisplay({
                     onChange={(e) =>
                         setSearchOptions(prev => ({
                             ...prev,
-                            searchTerm: e.target.value,
+                            searchTerm: e.target.value.toLowerCase(),
                         }))
                     }
                     className="mb-6"

@@ -9,10 +9,9 @@ export default function SearchBar() {
 
     const handleSearchChange = useDebouncedCallback((searchText: string)=>
     {
-        console.log(searchText);
         const params = new URLSearchParams(searchParams);
         if (searchText) {
-            params.set("search", searchText);
+            params.set("search", searchText.toLowerCase());
         } else {
             params.delete("search");
         }
