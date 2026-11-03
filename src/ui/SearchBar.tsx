@@ -11,7 +11,7 @@ export default function SearchBar() {
     {
         const params = new URLSearchParams(searchParams);
         if (searchText) {
-            params.set("search", searchText.toLowerCase());
+            params.set("search", searchText);
         } else {
             params.delete("search");
         }
