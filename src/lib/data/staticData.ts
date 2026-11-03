@@ -19,3 +19,9 @@ export const aldiStoreId = (await prisma.store.findUniqueOrThrow({
         name: "Aldi"
     }
 })).id;
+
+export const colesStoreId = (await prisma.store.findUniqueOrThrow({
+    where: {
+        name: "Coles"
+    }
+})).id;
