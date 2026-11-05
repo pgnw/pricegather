@@ -6,11 +6,11 @@ import {WhoolworthsApiProduct} from "@/lib/scraping/woolworths/woolworths";
 export function transformWhoolworthsAPIProduct(apiProduct: WhoolworthsApiProduct): Product {
     let grams = null;
     let measurementTypeId = null;
-    if (apiProduct.PackageSize != null && apiProduct.PackageSize !== "each") {
+    if (apiProduct.PackageSize != null) {
         const regex = new RegExp("([0-9]*)(.*)");
         const result = regex.exec(apiProduct.PackageSize);
         if (result != null) {
-            let [, weightNumberStr, weightSymbol] = result;
+            let [, , weightSymbol] = result;
 
             weightSymbol = weightSymbol.toLowerCase();
 
@@ -20,11 +20,7 @@ export function transformWhoolworthsAPIProduct(apiProduct: WhoolworthsApiProduct
                 measurementTypeId = volumeMeasurementType?.id;
             }
 
-            if (weightSymbol == "g" || weightSymbol == "ml") {
-                grams = Number(weightNumberStr);
-            } else if (weightSymbol == "kg" || weightSymbol == "l") {
-                grams = Number(weightNumberStr) * 1000;
-            }
+            grams = apiProduct.UnitWeightInGrams;
         }
     }
 

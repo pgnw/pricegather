@@ -19,13 +19,12 @@ import {cn} from "@/lib/utils";
 import ProductsTableHeader from "@/ui/ProductsTableHeader";
 import {ProductWithMeasurement} from "@/lib/data/products";
 import {DisplayProduct} from "@/lib/types";
-import {colesStoreId} from "@/lib/data/staticData";
 
-const storeRowBackgrounds: Record<string, string> = {
-    colesStoreId: "bg-red-500/5 hover:bg-red-500/10",
-    whoolworthsStoreId: "bg-blue-600/5 hover:bg-blue-600/10",
-    aldiStoreId: "bg-green-600/5 hover:bg-green-600/10",
-};
+// const storeRowBackgrounds: Record<number, string> = {
+//     [colesStoreId]: "bg-red-500/5 hover:bg-red-500/10",
+//     [woolworthsStoreId]: "bg-green-600/5 hover:bg-green-600/10",
+//     [aldiStoreId]: "bg-blue-600/5 hover:bg-blue-600/10",
+// };
 
 export default function ProductsTableBody({
                                               searchOptions,
@@ -162,10 +161,10 @@ export default function ProductsTableBody({
                                 "absolute left-0 top-0 grid w-full grid-cols-3 sm:grid-cols-[minmax(0,1fr)_120px_120px_120px]",
                                 "items-center gap-x-2 gap-y-1 sm:gap-4 border-b",
                                 "px-2 py-2 sm:px-4 sm:py-3 text-sm",
-                                storeRowBackgrounds[product.storeId] ?? "bg-background hover:bg-muted/30"
+                                // storeRowBackgrounds[product.storeId] ?? "bg-background hover:bg-muted/30"
                             )}
                             style={{
-                                transform: `translateY(${virtualRow.start}px)`
+                                transform: `translateY(${virtualRow.start}px)`,
                             }}
                         >
                             <div className="col-span-3 min-w-0 sm:col-span-1">

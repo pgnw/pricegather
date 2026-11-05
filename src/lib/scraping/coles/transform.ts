@@ -29,6 +29,10 @@ export function transformColesAPIProduct(apiProduct: ColesProduct): Product {
         }
     }
 
+    if (!apiProduct.name ) {
+        console.log('hello');
+    }
+
     const product = {
         id: 'c_' + apiProduct.id,
         storeId: colesStoreId,

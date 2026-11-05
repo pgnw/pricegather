@@ -135,5 +135,6 @@ export type WhoolworthsApiProduct = {
     Vendor: string,
     AdditionalAttributes: {
         piesdepartmentnamesjson: string,
-    }
+    },
+    UnitWeightInGrams: number,
 };
