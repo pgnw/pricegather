@@ -20,9 +20,10 @@ export function transformWhoolworthsAPIProduct(apiProduct: WhoolworthsApiProduct
                 measurementTypeId = volumeMeasurementType?.id;
             }
 
-            grams = apiProduct.UnitWeightInGrams;
         }
     }
+
+    grams = apiProduct.UnitWeightInGrams;
 
     const product = {
         id: 'w_' + apiProduct.Stockcode.toString(),
