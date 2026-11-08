@@ -3,7 +3,7 @@ import {Prisma, Product} from "@/generated/prisma/client";
 import {store} from "next/dist/build/output/store";
 import {SortOrder} from "@/generated/prisma/internal/prismaNamespace";
 
-const productWithMeasurement = {include: { measurementType: true}} satisfies Prisma.ProductDefaultArgs;
+const productWithMeasurement = {include: {measurementType: true}} satisfies Prisma.ProductDefaultArgs;
 export type ProductWithMeasurement = Prisma.ProductGetPayload<typeof productWithMeasurement>;
 
 export async function getProducts(productName?: string, limit?: number, offset?: number, orderBy?: SortOrder): Promise<Product[]> {
@@ -23,6 +23,7 @@ export async function getProducts(productName?: string, limit?: number, offset?:
 
     return productsPromise;
 }
+
 export async function getProductsWithMeasurementUnits(productName?: string, limit?: number, offset?: number, orderBy?: SortOrder): Promise<ProductWithMeasurement[]> {
     const productsPromise = prisma.product.findMany({
         where: {
@@ -64,12 +65,35 @@ export async function deleteProductsFromStore(storeId: number) {
 }
 
 export async function populateStore(storeId: number, products: Product[]) {
-    const [deleteResult, createResult ] = await prisma.$transaction([
-        prisma.product.deleteMany({
-            where: {
-                storeId: storeId
-            }
-        }),
-        prisma.product.createMany({data: products}),
-    ]);
+
+    await prisma.product.deleteMany({
+        where: {storeId: storeId}
+    });
+
+    // Prisma seems to fail inconsistently with larger bulk inserts.
+    const batchSize = 5000;
+
+    for (let i = 0; i < products.length; i += batchSize) {
+        const currentBatch: Product[] = products.slice(i, i + batchSize);
+
+        try {
+
+            await prisma.product.createMany({
+                data: currentBatch
+            });
+        } catch
+            (e) {
+            console.log('error', e);
+        }
+
+    }
+
+    // const [deleteResult, createResult] = await prisma.$transaction([
+    //     prisma.product.deleteMany({
+    //         where: {
+    //             storeId: storeId
+    //         }
+    //     }),
+    //     prisma.product.createMany({data: products}),
+    // ]);
 }
