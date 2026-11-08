@@ -59,12 +59,21 @@ export default function ProductsTableBody({
         let filteredProducts = products;
 
         filteredProducts = products.filter(product => {
-            if (product.price == null)
+            if (product.price === null)
                 return false;
-            return (!(product.price > (searchOptions.maxPrice ?? 1000000) * 100
-                || product.price < (searchOptions.minPrice ?? 0) * 100
-                || product.grams != null && product.grams > (searchOptions.maxWeight ?? Number.MAX_VALUE)
-                || product.grams != null && product.grams < (searchOptions.minWeight ?? Number.MIN_VALUE)));
+
+            if (product.grams != null) {
+                return (
+                    product.grams > (searchOptions.maxWeight ?? Number.MAX_VALUE)
+                    || product.grams < (searchOptions.minWeight ?? Number.MIN_VALUE)
+                )
+            }
+            return (
+                !(
+                    product.price > (searchOptions.maxPrice ?? 1000000) * 100
+                    || product.price < (searchOptions.minPrice ?? 0) * 100
+                )
+            );
         });
 
         if (searchOptions.searchTerm !== "") {
@@ -132,7 +141,7 @@ export default function ProductsTableBody({
     rowVirtualizer.shouldAdjustScrollPositionOnItemSizeChange = () => false;
 
     const product = products[0];
-    const a= (product.price! / 100).toFixed(2);
+    const a = (product.price! / 100).toFixed(2);
 
     return (<>
         <div
@@ -184,7 +193,7 @@ export default function ProductsTableBody({
 
                             <div className="whitespace-nowrap font-medium">
                                 {product.price
-                                ? `$${(product.price / 100).toFixed(2)}` : '-'}
+                                    ? `$${(product.price / 100).toFixed(2)}` : '-'}
                             </div>
 
                             <div className="whitespace-nowrap text-muted-foreground">
